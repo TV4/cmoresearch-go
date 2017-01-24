@@ -2,6 +2,7 @@ package search
 
 import (
 	"bytes"
+	"context"
 	"fmt"
 	"io/ioutil"
 	"net/http"
@@ -129,7 +130,7 @@ func TestDo(t *testing.T) {
 			t.Fatalf("New: unexpected error: %v", err)
 		}
 
-		res, err := s.Do(&Query{})
+		res, err := s.Do(context.Background(), &Query{})
 		if err != nil {
 			t.Fatalf("Search: unexpected error: %v", err)
 		}
@@ -288,7 +289,7 @@ func TestDo(t *testing.T) {
 				t.Fatalf("[%d] New: unexpected error: %v", n, err)
 			}
 
-			_, err = s.Do(&Query{})
+			_, err = s.Do(context.Background(), &Query{})
 
 			if err == nil {
 				t.Fatalf("[%d], Search: got nil, want err", n)
@@ -318,7 +319,7 @@ func TestDo(t *testing.T) {
 			t.Fatalf("New: unexpected error: %v", err)
 		}
 
-		_, err = s.Do(&Query{})
+		_, err = s.Do(context.Background(), &Query{})
 
 		if err == nil {
 			t.Fatal("Search: got nil, want err")
@@ -357,7 +358,7 @@ func TestDo(t *testing.T) {
 			r.Header.Set("Foo", "foo-header")
 		}
 
-		_, err = s.Do(&Query{}, option)
+		_, err = s.Do(context.Background(), &Query{}, option)
 
 		if got, want := fooHeader, "foo-header"; got != want {
 			t.Errorf("option not set; fooHeader = %q, want %q", got, want)
@@ -383,7 +384,7 @@ func TestDo(t *testing.T) {
 		}
 
 		option := SetRequestID("request-id")
-		_, err = s.Do(&Query{}, option)
+		_, err = s.Do(context.Background(), &Query{}, option)
 
 		if got, want := requestID, "request-id"; got != want {
 			t.Errorf("option not set; requestID = %q, want %q", got, want)

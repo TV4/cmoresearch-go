@@ -2,6 +2,7 @@
 package search
 
 import (
+	"context"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -124,7 +125,7 @@ func SetLogf(logf func(string, ...interface{})) func(*Search) {
 }
 
 // Do performs a search and returns the result.
-func (s *Search) Do(q *Query, options ...func(r *http.Request)) (*Result, error) {
+func (s *Search) Do(ctx context.Context, q *Query, options ...func(r *http.Request)) (*Result, error) {
 	rel, err := url.Parse(path.Join(s.baseURL.Path, "/search"))
 	if err != nil {
 		return nil, err
@@ -137,6 +138,8 @@ func (s *Search) Do(q *Query, options ...func(r *http.Request)) (*Result, error)
 	if err != nil {
 		return nil, err
 	}
+
+	req = req.WithContext(ctx)
 
 	for _, o := range options {
 		o(req)
