@@ -94,8 +94,16 @@ func New(baseURL string, hc *http.Client, logf func(string, ...interface{})) (*S
 	return s, nil
 }
 
+// SetRequestID is an option for Do to set the X-Request-Id header on the
+// search request.
+func SetRequestID(requestID string) func(*http.Request) {
+	return func(r *http.Request) {
+		r.Header.Set("X-Request-Id", requestID)
+	}
+}
+
 // Do performs a search and returns the result.
-func (s *Search) Do(q *Query) (*Result, error) {
+func (s *Search) Do(q *Query, options ...func(r *http.Request)) (*Result, error) {
 	rel, err := url.Parse(path.Join(s.baseURL.Path, "/search"))
 	if err != nil {
 		return nil, err
@@ -107,6 +115,10 @@ func (s *Search) Do(q *Query) (*Result, error) {
 	req, err := http.NewRequest("GET", u.String(), nil)
 	if err != nil {
 		return nil, err
+	}
+
+	for _, o := range options {
+		o(req)
 	}
 
 	s.logf("GET %s", u)

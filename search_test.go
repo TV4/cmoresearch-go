@@ -302,6 +302,61 @@ func TestDo(t *testing.T) {
 			t.Errorf("ae.Error() = %q, want %q", got, want)
 		}
 	})
+
+	t.Run("ArbitraryOption", func(t *testing.T) {
+		var fooHeader string
+		var mockT mockTransport = func(r *http.Request) (*http.Response, error) {
+			resp := &http.Response{
+				Body:       ioutil.NopCloser(strings.NewReader("")),
+				StatusCode: http.StatusOK,
+			}
+			fooHeader = r.Header.Get("Foo")
+			return resp, nil
+		}
+
+		hc := &http.Client{Transport: mockT}
+
+		s, err := New("/", hc, nil)
+		if err != nil {
+			t.Fatalf("New: unexpected error: %v", err)
+		}
+
+		option := func(r *http.Request) {
+			r.Header.Set("Foo", "foo-header")
+		}
+
+		_, err = s.Do(&Query{}, option)
+
+		if got, want := fooHeader, "foo-header"; got != want {
+			t.Errorf("option not set; fooHeader = %q, want %q", got, want)
+		}
+	})
+
+	t.Run("SetRequestIDOption", func(t *testing.T) {
+		var requestID string
+		var mockT mockTransport = func(r *http.Request) (*http.Response, error) {
+			resp := &http.Response{
+				Body:       ioutil.NopCloser(strings.NewReader("")),
+				StatusCode: http.StatusOK,
+			}
+			requestID = r.Header.Get("X-Request-Id")
+			return resp, nil
+		}
+
+		hc := &http.Client{Transport: mockT}
+
+		s, err := New("/", hc, nil)
+		if err != nil {
+			t.Fatalf("New: unexpected error: %v", err)
+		}
+
+		option := SetRequestID("request-id")
+		_, err = s.Do(&Query{}, option)
+
+		if got, want := requestID, "request-id"; got != want {
+			t.Errorf("option not set; requestID = %q, want %q", got, want)
+		}
+	})
 }
 
 func TestLogf(t *testing.T) {
