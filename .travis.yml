@@ -1,0 +1,15 @@
+language: go
+
+go:
+  - 1.7
+  - 1.8rc2
+
+install:
+  - go get github.com/golang/lint/golint
+
+script:
+  - golint -set_exit_status
+  - go vet $(go list ./...)
+  - go test $(go list ./...)
+
+sudo: false
