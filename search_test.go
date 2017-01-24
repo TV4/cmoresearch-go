@@ -15,6 +15,38 @@ func (mt mockTransport) RoundTrip(r *http.Request) (*http.Response, error) {
 	return mt(r)
 }
 
+func TestNew(t *testing.T) {
+	t.Run("SetLogf", func(t *testing.T) {
+		var buf bytes.Buffer
+		logf := func(format string, v ...interface{}) {
+			fmt.Fprintf(&buf, format, v...)
+		}
+		s, err := New("/", SetLogf(logf))
+		if err != nil {
+			t.Fatalf("unexpected error: %v", err)
+		}
+
+		s.logf("foo %s", "bar")
+
+		if got, want := buf.String(), "foo bar"; got != want {
+			t.Errorf("got %q, want %q", got, want)
+		}
+	})
+
+	t.Run("SetHTTPClient", func(t *testing.T) {
+		hc := &http.Client{}
+
+		s, err := New("/", SetHTTPClient(hc))
+		if err != nil {
+			t.Fatalf("unexpected error: %v", err)
+		}
+
+		if got, want := s.httpClient, hc; got != want {
+			t.Errorf("s.httpClient = %p, want %p", got, want)
+		}
+	})
+}
+
 func TestIsJSONResponse(t *testing.T) {
 	for n, tt := range []struct {
 		contentType string
@@ -92,7 +124,7 @@ func TestDo(t *testing.T) {
 
 		hc := &http.Client{Transport: mockT}
 
-		s, err := New("/", hc, nil)
+		s, err := New("/", SetHTTPClient(hc))
 		if err != nil {
 			t.Fatalf("New: unexpected error: %v", err)
 		}
@@ -251,7 +283,7 @@ func TestDo(t *testing.T) {
 
 			hc := &http.Client{Transport: mockT}
 
-			s, err := New("/", hc, nil)
+			s, err := New("/", SetHTTPClient(hc))
 			if err != nil {
 				t.Fatalf("[%d] New: unexpected error: %v", n, err)
 			}
@@ -281,7 +313,7 @@ func TestDo(t *testing.T) {
 
 		hc := &http.Client{Transport: mockT}
 
-		s, err := New("/", hc, nil)
+		s, err := New("/", SetHTTPClient(hc))
 		if err != nil {
 			t.Fatalf("New: unexpected error: %v", err)
 		}
@@ -316,7 +348,7 @@ func TestDo(t *testing.T) {
 
 		hc := &http.Client{Transport: mockT}
 
-		s, err := New("/", hc, nil)
+		s, err := New("/", SetHTTPClient(hc))
 		if err != nil {
 			t.Fatalf("New: unexpected error: %v", err)
 		}
@@ -345,7 +377,7 @@ func TestDo(t *testing.T) {
 
 		hc := &http.Client{Transport: mockT}
 
-		s, err := New("/", hc, nil)
+		s, err := New("/", SetHTTPClient(hc))
 		if err != nil {
 			t.Fatalf("New: unexpected error: %v", err)
 		}
@@ -357,21 +389,4 @@ func TestDo(t *testing.T) {
 			t.Errorf("option not set; requestID = %q, want %q", got, want)
 		}
 	})
-}
-
-func TestLogf(t *testing.T) {
-	var buf bytes.Buffer
-	logf := func(format string, v ...interface{}) {
-		fmt.Fprintf(&buf, format, v...)
-	}
-	s, err := New("/", nil, logf)
-	if err != nil {
-		t.Fatalf("unexpected error: %v", err)
-	}
-
-	s.logf("foo %s", "bar")
-
-	if got, want := buf.String(), "foo bar"; got != want {
-		t.Errorf("got %q, want %q", got, want)
-	}
 }
