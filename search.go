@@ -76,8 +76,8 @@ type Season struct {
 }
 
 // New returns a new search client.
-func New(baseURL string, options ...func(*Search) error) (*Search, error) {
-	bu, err := url.Parse(baseURL)
+func New(options ...func(*Search) error) (*Search, error) {
+	bu, err := url.Parse("https://search.b17g.services/")
 	if err != nil {
 		return nil, err
 	}
@@ -107,6 +107,19 @@ func New(baseURL string, options ...func(*Search) error) (*Search, error) {
 func SetRequestID(requestID string) func(*http.Request) {
 	return func(r *http.Request) {
 		r.Header.Set("X-Request-Id", requestID)
+	}
+}
+
+// SetBaseURL is an option to set a custom URL to the search service when
+// creating a new Search instance.
+func SetBaseURL(rawurl string) func(*Search) error {
+	return func(s *Search) error {
+		bu, err := url.Parse(rawurl)
+		if err != nil {
+			return err
+		}
+		s.baseURL = bu
+		return nil
 	}
 }
 

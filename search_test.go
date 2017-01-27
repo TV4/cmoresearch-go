@@ -19,16 +19,38 @@ func (mt mockTransport) RoundTrip(r *http.Request) (*http.Response, error) {
 }
 
 func TestNew(t *testing.T) {
+	t.Run("DefaultConfig", func(t *testing.T) {
+		s, err := New()
+		if err != nil {
+			t.Fatalf("unexpected error: %v", err)
+		}
+
+		if got, want := s.baseURL.String(), "https://search.b17g.services/"; got != want {
+			t.Errorf("s.baseURL.String() = %q, want %q", got, want)
+		}
+	})
+
 	t.Run("OptionReturningError", func(t *testing.T) {
 		optionError := errors.New("option error")
 		option := func(*Search) error {
 			return optionError
 		}
 
-		_, err := New("/", option)
+		_, err := New(SetBaseURL("/"), option)
 
 		if got, want := err, optionError; got != want {
 			t.Errorf("got err = %v, %v", got, want)
+		}
+	})
+
+	t.Run("SetBaseURL", func(t *testing.T) {
+		s, err := New(SetBaseURL("http://example.com/"))
+		if err != nil {
+			t.Fatalf("unexpected error: %v", err)
+		}
+
+		if got, want := s.baseURL.String(), "http://example.com/"; got != want {
+			t.Errorf("s.baseURL.String() = %q, want %q", got, want)
 		}
 	})
 
@@ -37,7 +59,7 @@ func TestNew(t *testing.T) {
 		logf := func(format string, v ...interface{}) {
 			fmt.Fprintf(&buf, format, v...)
 		}
-		s, err := New("/", SetLogf(logf))
+		s, err := New(SetBaseURL("/"), SetLogf(logf))
 		if err != nil {
 			t.Fatalf("unexpected error: %v", err)
 		}
@@ -52,7 +74,7 @@ func TestNew(t *testing.T) {
 	t.Run("SetHTTPClient", func(t *testing.T) {
 		hc := &http.Client{}
 
-		s, err := New("/", SetHTTPClient(hc))
+		s, err := New(SetBaseURL("/"), SetHTTPClient(hc))
 		if err != nil {
 			t.Fatalf("unexpected error: %v", err)
 		}
@@ -140,7 +162,7 @@ func TestDo(t *testing.T) {
 
 		hc := &http.Client{Transport: mockT}
 
-		s, err := New("/", SetHTTPClient(hc))
+		s, err := New(SetBaseURL("/"), SetHTTPClient(hc))
 		if err != nil {
 			t.Fatalf("New: unexpected error: %v", err)
 		}
@@ -299,7 +321,7 @@ func TestDo(t *testing.T) {
 
 			hc := &http.Client{Transport: mockT}
 
-			s, err := New("/", SetHTTPClient(hc))
+			s, err := New(SetBaseURL("/"), SetHTTPClient(hc))
 			if err != nil {
 				t.Fatalf("[%d] New: unexpected error: %v", n, err)
 			}
@@ -329,7 +351,7 @@ func TestDo(t *testing.T) {
 
 		hc := &http.Client{Transport: mockT}
 
-		s, err := New("/", SetHTTPClient(hc))
+		s, err := New(SetBaseURL("/"), SetHTTPClient(hc))
 		if err != nil {
 			t.Fatalf("New: unexpected error: %v", err)
 		}
@@ -364,7 +386,7 @@ func TestDo(t *testing.T) {
 
 		hc := &http.Client{Transport: mockT}
 
-		s, err := New("/", SetHTTPClient(hc))
+		s, err := New(SetBaseURL("/"), SetHTTPClient(hc))
 		if err != nil {
 			t.Fatalf("New: unexpected error: %v", err)
 		}
@@ -393,7 +415,7 @@ func TestDo(t *testing.T) {
 
 		hc := &http.Client{Transport: mockT}
 
-		s, err := New("/", SetHTTPClient(hc))
+		s, err := New(SetBaseURL("/"), SetHTTPClient(hc))
 		if err != nil {
 			t.Fatalf("New: unexpected error: %v", err)
 		}
@@ -419,7 +441,7 @@ func TestDo(t *testing.T) {
 
 		hc := &http.Client{Transport: mockT}
 
-		s, err := New("/", SetHTTPClient(hc))
+		s, err := New(SetBaseURL("/"), SetHTTPClient(hc))
 		if err != nil {
 			t.Fatalf("New: unexpected error: %v", err)
 		}
