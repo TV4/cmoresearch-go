@@ -76,7 +76,7 @@ type Season struct {
 }
 
 // New returns a new search client.
-func New(baseURL string, options ...func(*Search)) (*Search, error) {
+func New(baseURL string, options ...func(*Search) error) (*Search, error) {
 	bu, err := url.Parse(baseURL)
 	if err != nil {
 		return nil, err
@@ -85,7 +85,9 @@ func New(baseURL string, options ...func(*Search)) (*Search, error) {
 	s := &Search{baseURL: bu}
 
 	for _, o := range options {
-		o(s)
+		if err := o(s); err != nil {
+			return nil, err
+		}
 	}
 
 	if s.httpClient == nil {
@@ -110,17 +112,19 @@ func SetRequestID(requestID string) func(*http.Request) {
 
 // SetHTTPClient is an option to set a custom HTTP client when creating a new
 // Search instance.
-func SetHTTPClient(c *http.Client) func(*Search) {
-	return func(s *Search) {
+func SetHTTPClient(c *http.Client) func(*Search) error {
+	return func(s *Search) error {
 		s.httpClient = c
+		return nil
 	}
 }
 
 // SetLogf is an option to configure a logf (Printf function for logging) when
 // creating a new Search instance.
-func SetLogf(logf func(string, ...interface{})) func(*Search) {
-	return func(s *Search) {
+func SetLogf(logf func(string, ...interface{})) func(*Search) error {
+	return func(s *Search) error {
 		s.logf = logf
+		return nil
 	}
 }
 

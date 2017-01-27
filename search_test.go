@@ -3,6 +3,7 @@ package search
 import (
 	"bytes"
 	"context"
+	"errors"
 	"fmt"
 	"io/ioutil"
 	"net/http"
@@ -18,6 +19,19 @@ func (mt mockTransport) RoundTrip(r *http.Request) (*http.Response, error) {
 }
 
 func TestNew(t *testing.T) {
+	t.Run("OptionReturningError", func(t *testing.T) {
+		optionError := errors.New("option error")
+		option := func(*Search) error {
+			return optionError
+		}
+
+		_, err := New("/", option)
+
+		if got, want := err, optionError; got != want {
+			t.Errorf("got err = %v, %v", got, want)
+		}
+	})
+
 	t.Run("SetLogf", func(t *testing.T) {
 		var buf bytes.Buffer
 		logf := func(format string, v ...interface{}) {
