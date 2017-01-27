@@ -125,14 +125,14 @@ func SetLogf(logf func(string, ...interface{})) func(*Search) {
 }
 
 // Do performs a search and returns the result.
-func (s *Search) Do(ctx context.Context, q *Query, options ...func(r *http.Request)) (*Result, error) {
+func (s *Search) Do(ctx context.Context, query url.Values, options ...func(r *http.Request)) (*Result, error) {
 	rel, err := url.Parse(path.Join(s.baseURL.Path, "/search"))
 	if err != nil {
 		return nil, err
 	}
 
 	u := s.baseURL.ResolveReference(rel)
-	u.RawQuery = q.rawURLQuery()
+	u.RawQuery = query.Encode()
 
 	req, err := http.NewRequest("GET", u.String(), nil)
 	if err != nil {
