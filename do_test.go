@@ -304,7 +304,7 @@ func TestDo(t *testing.T) {
 			r.Header.Set("Foo", "foo-header")
 		}
 
-		_, err = s.Do(context.Background(), nil, option)
+		s.Do(context.Background(), nil, option)
 
 		if got, want := fooHeader, "foo-header"; got != want {
 			t.Errorf("option not set; fooHeader = %q, want %q", got, want)
@@ -330,7 +330,7 @@ func TestDo(t *testing.T) {
 		}
 
 		option := SetRequestID("request-id")
-		_, err = s.Do(context.Background(), nil, option)
+		s.Do(context.Background(), nil, option)
 
 		if got, want := requestID, "request-id"; got != want {
 			t.Errorf("option not set; requestID = %q, want %q", got, want)
@@ -359,7 +359,7 @@ func TestDo(t *testing.T) {
 		query.Add("foo", "123")
 		query.Add("bar&", "234 567")
 		query.Add("baz", "345")
-		_, err = s.Do(context.Background(), query)
+		s.Do(context.Background(), query)
 
 		if got, want := queryString, "bar%26=234+567&baz=345&foo=123"; got != want {
 			t.Errorf("queryString = %q, want %q", got, want)
