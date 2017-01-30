@@ -12,8 +12,8 @@ import (
 	"path"
 )
 
-// Do performs a search and returns the result.
-func (c *Client) Do(ctx context.Context, query url.Values, options ...func(r *http.Request)) (*Result, error) {
+// Search performs a search and returns the result.
+func (c *Client) Search(ctx context.Context, query url.Values, options ...func(r *http.Request)) (*Result, error) {
 	rel, err := url.Parse(path.Join(c.baseURL.Path, "/search"))
 	if err != nil {
 		return nil, err
@@ -67,7 +67,7 @@ func (c *Client) Do(ctx context.Context, query url.Values, options ...func(r *ht
 	return &result, nil
 }
 
-// SetRequestID is an option for Do to set the X-Request-Id header on the
+// SetRequestID is an option for Search to set the X-Request-Id header on the
 // search request.
 func SetRequestID(requestID string) func(*http.Request) {
 	return func(r *http.Request) {
