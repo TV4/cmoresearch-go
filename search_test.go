@@ -71,7 +71,7 @@ func TestSearch(t *testing.T) {
 
 		hc := &http.Client{Transport: mockT}
 
-		c, err := New(SetBaseURL("/"), SetHTTPClient(hc))
+		c, err := NewClient(SetBaseURL("/"), SetHTTPClient(hc))
 		if err != nil {
 			t.Fatalf("New: unexpected error: %v", err)
 		}
@@ -230,7 +230,7 @@ func TestSearch(t *testing.T) {
 
 			hc := &http.Client{Transport: mockT}
 
-			c, err := New(SetBaseURL("/"), SetHTTPClient(hc))
+			c, err := NewClient(SetBaseURL("/"), SetHTTPClient(hc))
 			if err != nil {
 				t.Fatalf("[%d] New: unexpected error: %v", n, err)
 			}
@@ -260,7 +260,7 @@ func TestSearch(t *testing.T) {
 
 		hc := &http.Client{Transport: mockT}
 
-		c, err := New(SetBaseURL("/"), SetHTTPClient(hc))
+		c, err := NewClient(SetBaseURL("/"), SetHTTPClient(hc))
 		if err != nil {
 			t.Fatalf("New: unexpected error: %v", err)
 		}
@@ -295,7 +295,7 @@ func TestSearch(t *testing.T) {
 
 		hc := &http.Client{Transport: mockT}
 
-		c, err := New(SetBaseURL("/"), SetHTTPClient(hc))
+		c, err := NewClient(SetBaseURL("/"), SetHTTPClient(hc))
 		if err != nil {
 			t.Fatalf("New: unexpected error: %v", err)
 		}
@@ -324,7 +324,7 @@ func TestSearch(t *testing.T) {
 
 		hc := &http.Client{Transport: mockT}
 
-		c, err := New(SetBaseURL("/"), SetHTTPClient(hc))
+		c, err := NewClient(SetBaseURL("/"), SetHTTPClient(hc))
 		if err != nil {
 			t.Fatalf("New: unexpected error: %v", err)
 		}
@@ -350,7 +350,7 @@ func TestSearch(t *testing.T) {
 
 		hc := &http.Client{Transport: mockT}
 
-		c, err := New(SetBaseURL("/"), SetHTTPClient(hc))
+		c, err := NewClient(SetBaseURL("/"), SetHTTPClient(hc))
 		if err != nil {
 			t.Fatalf("New: unexpected error: %v", err)
 		}

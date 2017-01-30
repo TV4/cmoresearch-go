@@ -8,9 +8,9 @@ import (
 	"testing"
 )
 
-func TestNew(t *testing.T) {
+func TestNewClient(t *testing.T) {
 	t.Run("DefaultConfig", func(t *testing.T) {
-		c, err := New()
+		c, err := NewClient()
 		if err != nil {
 			t.Fatalf("unexpected error: %v", err)
 		}
@@ -26,7 +26,7 @@ func TestNew(t *testing.T) {
 			return optionError
 		}
 
-		_, err := New(SetBaseURL("/"), option)
+		_, err := NewClient(SetBaseURL("/"), option)
 
 		if got, want := err, optionError; got != want {
 			t.Errorf("got err = %v, %v", got, want)
@@ -34,7 +34,7 @@ func TestNew(t *testing.T) {
 	})
 
 	t.Run("SetBaseURL", func(t *testing.T) {
-		c, err := New(SetBaseURL("http://example.com/"))
+		c, err := NewClient(SetBaseURL("http://example.com/"))
 		if err != nil {
 			t.Fatalf("unexpected error: %v", err)
 		}
@@ -49,7 +49,7 @@ func TestNew(t *testing.T) {
 		logf := func(format string, v ...interface{}) {
 			fmt.Fprintf(&buf, format, v...)
 		}
-		c, err := New(SetBaseURL("/"), SetLogf(logf))
+		c, err := NewClient(SetBaseURL("/"), SetLogf(logf))
 		if err != nil {
 			t.Fatalf("unexpected error: %v", err)
 		}
@@ -64,7 +64,7 @@ func TestNew(t *testing.T) {
 	t.Run("SetHTTPClient", func(t *testing.T) {
 		hc := &http.Client{}
 
-		c, err := New(SetBaseURL("/"), SetHTTPClient(hc))
+		c, err := NewClient(SetBaseURL("/"), SetHTTPClient(hc))
 		if err != nil {
 			t.Fatalf("unexpected error: %v", err)
 		}

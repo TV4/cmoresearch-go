@@ -14,8 +14,8 @@ type Client struct {
 	logf       func(string, ...interface{})
 }
 
-// New returns a new search client.
-func New(options ...func(*Client) error) (*Client, error) {
+// NewClient returns a new search client.
+func NewClient(options ...func(*Client) error) (*Client, error) {
 	bu, err := url.Parse("https://search.b17g.services/")
 	if err != nil {
 		return nil, err
