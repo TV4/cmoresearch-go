@@ -7,8 +7,8 @@ import (
 	"net/url"
 )
 
-// Search is a client for the search service.
-type Search struct {
+// Client is a client for the search service.
+type Client struct {
 	baseURL    *url.URL
 	httpClient *http.Client
 	logf       func(string, ...interface{})
@@ -69,59 +69,59 @@ type Season struct {
 }
 
 // New returns a new search client.
-func New(options ...func(*Search) error) (*Search, error) {
+func New(options ...func(*Client) error) (*Client, error) {
 	bu, err := url.Parse("https://search.b17g.services/")
 	if err != nil {
 		return nil, err
 	}
 
-	s := &Search{baseURL: bu}
+	c := &Client{baseURL: bu}
 
 	for _, o := range options {
-		if err := o(s); err != nil {
+		if err := o(c); err != nil {
 			return nil, err
 		}
 	}
 
-	if s.httpClient == nil {
+	if c.httpClient == nil {
 		dup := *http.DefaultClient
-		s.httpClient = &dup
+		c.httpClient = &dup
 	}
 
-	if s.logf == nil {
-		s.logf = func(string, ...interface{}) {}
+	if c.logf == nil {
+		c.logf = func(string, ...interface{}) {}
 	}
 
-	return s, nil
+	return c, nil
 }
 
 // SetBaseURL is an option to set a custom URL to the search service when
 // creating a new Search instance.
-func SetBaseURL(rawurl string) func(*Search) error {
-	return func(s *Search) error {
+func SetBaseURL(rawurl string) func(*Client) error {
+	return func(c *Client) error {
 		bu, err := url.Parse(rawurl)
 		if err != nil {
 			return err
 		}
-		s.baseURL = bu
+		c.baseURL = bu
 		return nil
 	}
 }
 
 // SetHTTPClient is an option to set a custom HTTP client when creating a new
 // Search instance.
-func SetHTTPClient(c *http.Client) func(*Search) error {
-	return func(s *Search) error {
-		s.httpClient = c
+func SetHTTPClient(hc *http.Client) func(*Client) error {
+	return func(c *Client) error {
+		c.httpClient = hc
 		return nil
 	}
 }
 
 // SetLogf is an option to configure a logf (Printf function for logging) when
 // creating a new Search instance.
-func SetLogf(logf func(string, ...interface{})) func(*Search) error {
-	return func(s *Search) error {
-		s.logf = logf
+func SetLogf(logf func(string, ...interface{})) func(*Client) error {
+	return func(c *Client) error {
+		c.logf = logf
 		return nil
 	}
 }

@@ -10,19 +10,19 @@ import (
 
 func TestNew(t *testing.T) {
 	t.Run("DefaultConfig", func(t *testing.T) {
-		s, err := New()
+		c, err := New()
 		if err != nil {
 			t.Fatalf("unexpected error: %v", err)
 		}
 
-		if got, want := s.baseURL.String(), "https://search.b17g.services/"; got != want {
+		if got, want := c.baseURL.String(), "https://search.b17g.services/"; got != want {
 			t.Errorf("s.baseURL.String() = %q, want %q", got, want)
 		}
 	})
 
 	t.Run("OptionReturningError", func(t *testing.T) {
 		optionError := errors.New("option error")
-		option := func(*Search) error {
+		option := func(*Client) error {
 			return optionError
 		}
 
@@ -34,12 +34,12 @@ func TestNew(t *testing.T) {
 	})
 
 	t.Run("SetBaseURL", func(t *testing.T) {
-		s, err := New(SetBaseURL("http://example.com/"))
+		c, err := New(SetBaseURL("http://example.com/"))
 		if err != nil {
 			t.Fatalf("unexpected error: %v", err)
 		}
 
-		if got, want := s.baseURL.String(), "http://example.com/"; got != want {
+		if got, want := c.baseURL.String(), "http://example.com/"; got != want {
 			t.Errorf("s.baseURL.String() = %q, want %q", got, want)
 		}
 	})
@@ -49,12 +49,12 @@ func TestNew(t *testing.T) {
 		logf := func(format string, v ...interface{}) {
 			fmt.Fprintf(&buf, format, v...)
 		}
-		s, err := New(SetBaseURL("/"), SetLogf(logf))
+		c, err := New(SetBaseURL("/"), SetLogf(logf))
 		if err != nil {
 			t.Fatalf("unexpected error: %v", err)
 		}
 
-		s.logf("foo %s", "bar")
+		c.logf("foo %s", "bar")
 
 		if got, want := buf.String(), "foo bar"; got != want {
 			t.Errorf("got %q, want %q", got, want)
@@ -64,12 +64,12 @@ func TestNew(t *testing.T) {
 	t.Run("SetHTTPClient", func(t *testing.T) {
 		hc := &http.Client{}
 
-		s, err := New(SetBaseURL("/"), SetHTTPClient(hc))
+		c, err := New(SetBaseURL("/"), SetHTTPClient(hc))
 		if err != nil {
 			t.Fatalf("unexpected error: %v", err)
 		}
 
-		if got, want := s.httpClient, hc; got != want {
+		if got, want := c.httpClient, hc; got != want {
 			t.Errorf("s.httpClient = %p, want %p", got, want)
 		}
 	})

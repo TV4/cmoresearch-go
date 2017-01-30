@@ -13,13 +13,13 @@ import (
 )
 
 // Do performs a search and returns the result.
-func (s *Search) Do(ctx context.Context, query url.Values, options ...func(r *http.Request)) (*Result, error) {
-	rel, err := url.Parse(path.Join(s.baseURL.Path, "/search"))
+func (c *Client) Do(ctx context.Context, query url.Values, options ...func(r *http.Request)) (*Result, error) {
+	rel, err := url.Parse(path.Join(c.baseURL.Path, "/search"))
 	if err != nil {
 		return nil, err
 	}
 
-	u := s.baseURL.ResolveReference(rel)
+	u := c.baseURL.ResolveReference(rel)
 	u.RawQuery = query.Encode()
 
 	req, err := http.NewRequest("GET", u.String(), nil)
@@ -33,9 +33,9 @@ func (s *Search) Do(ctx context.Context, query url.Values, options ...func(r *ht
 		o(req)
 	}
 
-	s.logf("GET %s", u)
+	c.logf("GET %s", u)
 
-	resp, err := s.httpClient.Do(req)
+	resp, err := c.httpClient.Do(req)
 	if err != nil {
 		return nil, err
 	}
