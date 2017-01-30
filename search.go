@@ -1,18 +1,16 @@
-// Package search implements a client for Bonnier Broadcasting's search service.
 package search
 
 import (
-	"mime"
+	"context"
+	"encoding/json"
+	"errors"
+	"fmt"
+	"io"
+	"io/ioutil"
 	"net/http"
 	"net/url"
+	"path"
 )
-
-// Client is a client for the search service.
-type Client struct {
-	baseURL    *url.URL
-	httpClient *http.Client
-	logf       func(string, ...interface{})
-}
 
 // Result represents the result as received from the search service.
 type Result struct {
@@ -68,66 +66,65 @@ type Season struct {
 	Number int    `json:"season_number"`
 }
 
-// New returns a new search client.
-func New(options ...func(*Client) error) (*Client, error) {
-	bu, err := url.Parse("https://search.b17g.services/")
+// Search performs a search and returns the result.
+func (c *Client) Search(ctx context.Context, query url.Values, options ...func(r *http.Request)) (*Result, error) {
+	rel, err := url.Parse(path.Join(c.baseURL.Path, "/search"))
 	if err != nil {
 		return nil, err
 	}
 
-	c := &Client{baseURL: bu}
+	u := c.baseURL.ResolveReference(rel)
+	u.RawQuery = query.Encode()
+
+	req, err := http.NewRequest("GET", u.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	req = req.WithContext(ctx)
 
 	for _, o := range options {
-		if err := o(c); err != nil {
-			return nil, err
+		o(req)
+	}
+
+	c.logf("GET %s", u)
+
+	resp, err := c.httpClient.Do(req)
+	if err != nil {
+		return nil, err
+	}
+
+	defer func() {
+		io.CopyN(ioutil.Discard, resp.Body, 64)
+		resp.Body.Close()
+	}()
+
+	if resp.StatusCode != http.StatusOK {
+		if !isJSONResponse(resp) {
+			return nil, fmt.Errorf("%d %s", resp.StatusCode, http.StatusText(resp.StatusCode))
 		}
-	}
-
-	if c.httpClient == nil {
-		dup := *http.DefaultClient
-		c.httpClient = &dup
-	}
-
-	if c.logf == nil {
-		c.logf = func(string, ...interface{}) {}
-	}
-
-	return c, nil
-}
-
-// SetBaseURL is an option to set a custom URL to the search service when
-// creating a new Search instance.
-func SetBaseURL(rawurl string) func(*Client) error {
-	return func(c *Client) error {
-		bu, err := url.Parse(rawurl)
-		if err != nil {
-			return err
+		var ae APIError
+		if err := json.NewDecoder(resp.Body).Decode(&ae); err != nil {
+			return nil, fmt.Errorf("%d %s; JSON response body malformed (%v)", resp.StatusCode, http.StatusText(resp.StatusCode), err)
 		}
-		c.baseURL = bu
-		return nil
+		return nil, &ae
 	}
+
+	if !isJSONResponse(resp) {
+		return nil, errors.New("Content-Type not JSON")
+	}
+
+	var result Result
+	if err := json.NewDecoder(resp.Body).Decode(&result); err != nil {
+		return nil, err
+	}
+	return &result, nil
 }
 
-// SetHTTPClient is an option to set a custom HTTP client when creating a new
-// Search instance.
-func SetHTTPClient(hc *http.Client) func(*Client) error {
-	return func(c *Client) error {
-		c.httpClient = hc
-		return nil
+// SetRequestID is an option for Search to set the X-Request-Id header on the
+// search request.
+func SetRequestID(requestID string) func(*http.Request) {
+	return func(r *http.Request) {
+		r.Header.Set("X-Request-Id", requestID)
 	}
-}
-
-// SetLogf is an option to configure a logf (Printf function for logging) when
-// creating a new Search instance.
-func SetLogf(logf func(string, ...interface{})) func(*Client) error {
-	return func(c *Client) error {
-		c.logf = logf
-		return nil
-	}
-}
-
-func isJSONResponse(resp *http.Response) bool {
-	ct := resp.Header.Get("Content-Type")
-	mt, _, _ := mime.ParseMediaType(ct)
-	return mt == "application/json"
 }
