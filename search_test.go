@@ -29,15 +29,15 @@ func TestSearch(t *testing.T) {
 								"title_sv": "Swedish title"
 							},
 							"description_extended_da": "Danish description (extended)",
-							"description_extended_fi": "Finnish desription (extended)",
+							"description_extended_fi": "Finnish description (extended)",
 							"description_extended_nb": "Norwegian description (extended)",
 							"description_extended_sv": "Swedish description (extended)",
 							"description_medium_da": "Danish description (medium)",
-							"description_medium_fi": "Finnish desription (medium)",
+							"description_medium_fi": "Finnish description (medium)",
 							"description_medium_nb": "Norwegian description (medium)",
 							"description_medium_sv": "Swedish description (medium)",
 							"description_short_da": "Danish description (short)",
-							"description_short_fi": "Finnish desription (short)",
+							"description_short_fi": "Finnish description (short)",
 							"description_short_nb": "Norwegian description (short)",
 							"description_short_sv": "Swedish description (short)",
 							"episode_number": 9,
@@ -109,7 +109,7 @@ func TestSearch(t *testing.T) {
 			t.Errorf("res.Assets[0].DescriptionExtendedDa = %q, want %q", got, want)
 		}
 
-		if got, want := res.Assets[0].DescriptionExtendedFi, "Finnish desription (extended)"; got != want {
+		if got, want := res.Assets[0].DescriptionExtendedFi, "Finnish description (extended)"; got != want {
 			t.Errorf("res.Assets[0].DescriptionExtendedFi = %q, want %q", got, want)
 		}
 
@@ -125,7 +125,7 @@ func TestSearch(t *testing.T) {
 			t.Errorf("res.Assets[0].DescriptionMediumDa = %q, want %q", got, want)
 		}
 
-		if got, want := res.Assets[0].DescriptionMediumFi, "Finnish desription (medium)"; got != want {
+		if got, want := res.Assets[0].DescriptionMediumFi, "Finnish description (medium)"; got != want {
 			t.Errorf("res.Assets[0].DescriptionMediumFi = %q, want %q", got, want)
 		}
 
@@ -141,7 +141,7 @@ func TestSearch(t *testing.T) {
 			t.Errorf("res.Assets[0].DescriptionShortDa = %q, want %q", got, want)
 		}
 
-		if got, want := res.Assets[0].DescriptionShortFi, "Finnish desription (short)"; got != want {
+		if got, want := res.Assets[0].DescriptionShortFi, "Finnish description (short)"; got != want {
 			t.Errorf("res.Assets[0].DescriptionShortFi = %q, want %q", got, want)
 		}
 
