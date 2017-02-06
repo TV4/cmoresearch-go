@@ -73,7 +73,7 @@ func TestSearch(t *testing.T) {
 
 		c, err := NewClient(SetBaseURL("/"), SetHTTPClient(hc))
 		if err != nil {
-			t.Fatalf("New: unexpected error: %v", err)
+			t.Fatalf("NewClient: unexpected error: %v", err)
 		}
 
 		res, err := c.Search(context.Background(), nil)
@@ -232,7 +232,7 @@ func TestSearch(t *testing.T) {
 
 			c, err := NewClient(SetBaseURL("/"), SetHTTPClient(hc))
 			if err != nil {
-				t.Fatalf("[%d] New: unexpected error: %v", n, err)
+				t.Fatalf("[%d] NewClient: unexpected error: %v", n, err)
 			}
 
 			_, err = c.Search(context.Background(), nil)
@@ -262,7 +262,7 @@ func TestSearch(t *testing.T) {
 
 		c, err := NewClient(SetBaseURL("/"), SetHTTPClient(hc))
 		if err != nil {
-			t.Fatalf("New: unexpected error: %v", err)
+			t.Fatalf("NewClient: unexpected error: %v", err)
 		}
 
 		_, err = c.Search(context.Background(), nil)
@@ -297,7 +297,7 @@ func TestSearch(t *testing.T) {
 
 		c, err := NewClient(SetBaseURL("/"), SetHTTPClient(hc))
 		if err != nil {
-			t.Fatalf("New: unexpected error: %v", err)
+			t.Fatalf("NewClient: unexpected error: %v", err)
 		}
 
 		option := func(r *http.Request) {
@@ -326,7 +326,7 @@ func TestSearch(t *testing.T) {
 
 		c, err := NewClient(SetBaseURL("/"), SetHTTPClient(hc))
 		if err != nil {
-			t.Fatalf("New: unexpected error: %v", err)
+			t.Fatalf("NewClient: unexpected error: %v", err)
 		}
 
 		option := SetRequestID("request-id")
@@ -352,7 +352,7 @@ func TestSearch(t *testing.T) {
 
 		c, err := NewClient(SetBaseURL("/"), SetHTTPClient(hc))
 		if err != nil {
-			t.Fatalf("New: unexpected error: %v", err)
+			t.Fatalf("NewClient: unexpected error: %v", err)
 		}
 
 		query := url.Values{}
