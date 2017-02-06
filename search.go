@@ -66,11 +66,16 @@ type Season struct {
 	Number int    `json:"season_number"`
 }
 
-// Search performs a search and returns the result.
-func (c *Client) Search(ctx context.Context, query url.Values, options ...func(r *http.Request)) (*Result, error) {
+// Search performs a search and returns the result. An error is returned if
+// there is an error while setting up or sending the request, but also if the
+// response status is not HTTP 200 OK or the response content is not JSON. If
+// the returned error is non-nil, the returned *Result will be nil and the
+// returned *http.Response will be either, depending on whether the error
+// occured before or after sending the request.
+func (c *Client) Search(ctx context.Context, query url.Values, options ...func(r *http.Request)) (*Result, *http.Response, error) {
 	rel, err := url.Parse(path.Join(c.baseURL.Path, "/search"))
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 
 	u := c.baseURL.ResolveReference(rel)
@@ -78,7 +83,7 @@ func (c *Client) Search(ctx context.Context, query url.Values, options ...func(r
 
 	req, err := http.NewRequest("GET", u.String(), nil)
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 
 	req = req.WithContext(ctx)
@@ -91,7 +96,7 @@ func (c *Client) Search(ctx context.Context, query url.Values, options ...func(r
 
 	resp, err := c.httpClient.Do(req)
 	if err != nil {
-		return nil, err
+		return nil, resp, err
 	}
 
 	defer func() {
@@ -101,24 +106,24 @@ func (c *Client) Search(ctx context.Context, query url.Values, options ...func(r
 
 	if resp.StatusCode != http.StatusOK {
 		if !isJSONResponse(resp) {
-			return nil, fmt.Errorf("%d %s", resp.StatusCode, http.StatusText(resp.StatusCode))
+			return nil, resp, fmt.Errorf("%d %s", resp.StatusCode, http.StatusText(resp.StatusCode))
 		}
 		var ae APIError
 		if err := json.NewDecoder(resp.Body).Decode(&ae); err != nil {
-			return nil, fmt.Errorf("%d %s; JSON response body malformed (%v)", resp.StatusCode, http.StatusText(resp.StatusCode), err)
+			return nil, resp, fmt.Errorf("%d %s; JSON response body malformed (%v)", resp.StatusCode, http.StatusText(resp.StatusCode), err)
 		}
-		return nil, &ae
+		return nil, resp, &ae
 	}
 
 	if !isJSONResponse(resp) {
-		return nil, errors.New("Content-Type not JSON")
+		return nil, resp, errors.New("Content-Type not JSON")
 	}
 
 	var result Result
 	if err := json.NewDecoder(resp.Body).Decode(&result); err != nil {
-		return nil, err
+		return nil, resp, err
 	}
-	return &result, nil
+	return &result, resp, nil
 }
 
 // SetRequestID is an option for Search to set the X-Request-Id header on the

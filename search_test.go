@@ -76,7 +76,7 @@ func TestSearch(t *testing.T) {
 			t.Fatalf("NewClient: unexpected error: %v", err)
 		}
 
-		res, err := c.Search(context.Background(), nil)
+		res, _, err := c.Search(context.Background(), nil)
 		if err != nil {
 			t.Fatalf("Search: unexpected error: %v", err)
 		}
@@ -235,7 +235,7 @@ func TestSearch(t *testing.T) {
 				t.Fatalf("[%d] NewClient: unexpected error: %v", n, err)
 			}
 
-			_, err = c.Search(context.Background(), nil)
+			_, _, err = c.Search(context.Background(), nil)
 
 			if err == nil {
 				t.Fatalf("[%d], Search: got nil, want err", n)
@@ -265,7 +265,7 @@ func TestSearch(t *testing.T) {
 			t.Fatalf("NewClient: unexpected error: %v", err)
 		}
 
-		_, err = c.Search(context.Background(), nil)
+		_, _, err = c.Search(context.Background(), nil)
 
 		if err == nil {
 			t.Fatal("Search: got nil, want err")
@@ -363,6 +363,28 @@ func TestSearch(t *testing.T) {
 
 		if got, want := queryString, "bar%26=234+567&baz=345&foo=123"; got != want {
 			t.Errorf("queryString = %q, want %q", got, want)
+		}
+	})
+
+	t.Run("HTTPResponsePassthrough", func(t *testing.T) {
+		wantResp := &http.Response{
+			Body: ioutil.NopCloser(strings.NewReader("")),
+		}
+		var mockT mockTransport = func(r *http.Request) (*http.Response, error) {
+			return wantResp, nil
+		}
+
+		hc := &http.Client{Transport: mockT}
+
+		c, err := NewClient(SetBaseURL("/"), SetHTTPClient(hc))
+		if err != nil {
+			t.Fatalf("NewClient: unexpected error: %v", err)
+		}
+
+		_, gotResp, _ := c.Search(context.Background(), nil)
+
+		if gotResp != wantResp {
+			t.Errorf("got %p, want %p", gotResp, wantResp)
 		}
 	})
 }
