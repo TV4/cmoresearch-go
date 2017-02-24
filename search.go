@@ -12,10 +12,17 @@ import (
 	"path"
 )
 
-// Result represents the result as received from the search service.
-type Result struct {
+// Response represents the result as received from the search service.
+type Response struct {
 	TotalHits int      `json:"total_hits"`
 	Assets    []*Asset `json:"assets"`
+	Meta      Meta     `json:"-"`
+}
+
+// Meta contains request/response meta information
+type Meta struct {
+	StatusCode int
+	Header     http.Header
 }
 
 // Asset is a subset of an asset returned by the search service. Its structure
@@ -66,16 +73,13 @@ type Season struct {
 	Number int    `json:"season_number"`
 }
 
-// Search performs a search and returns the result. An error is returned if
+// Search performs a search and returns the response. An error is returned if
 // there is an error while setting up or sending the request, but also if the
-// response status is not HTTP 200 OK or the response content is not JSON. If
-// the returned error is non-nil, the returned *Result will be nil and the
-// returned *http.Response will be either, depending on whether the error
-// occured before or after sending the request.
-func (c *Client) Search(ctx context.Context, query url.Values, options ...func(r *http.Request)) (*Result, *http.Response, error) {
+// response status is not HTTP 200 OK or the response content is not JSON.
+func (c *Client) Search(ctx context.Context, query url.Values, options ...func(r *http.Request)) (Response, error) {
 	rel, err := url.Parse(path.Join(c.baseURL.Path, "/search"))
 	if err != nil {
-		return nil, nil, err
+		return Response{}, err
 	}
 
 	u := c.baseURL.ResolveReference(rel)
@@ -83,7 +87,7 @@ func (c *Client) Search(ctx context.Context, query url.Values, options ...func(r
 
 	req, err := http.NewRequest("GET", u.String(), nil)
 	if err != nil {
-		return nil, nil, err
+		return Response{}, err
 	}
 
 	req = req.WithContext(ctx)
@@ -95,9 +99,16 @@ func (c *Client) Search(ctx context.Context, query url.Values, options ...func(r
 	c.logf("GET %s", u)
 
 	resp, err := c.httpClient.Do(req)
+
 	if err != nil {
-		return nil, resp, err
+		return Response{}, err
 	}
+
+	meta := Meta{
+		StatusCode: resp.StatusCode,
+		Header:     resp.Header,
+	}
+	responseWithMeta := Response{Meta: meta}
 
 	defer func() {
 		io.CopyN(ioutil.Discard, resp.Body, 64)
@@ -106,24 +117,25 @@ func (c *Client) Search(ctx context.Context, query url.Values, options ...func(r
 
 	if resp.StatusCode != http.StatusOK {
 		if !isJSONResponse(resp) {
-			return nil, resp, fmt.Errorf("%d %s", resp.StatusCode, http.StatusText(resp.StatusCode))
+			return responseWithMeta, fmt.Errorf("%d %s", resp.StatusCode, http.StatusText(resp.StatusCode))
 		}
 		var ae APIError
 		if err := json.NewDecoder(resp.Body).Decode(&ae); err != nil {
-			return nil, resp, fmt.Errorf("%d %s; JSON response body malformed (%v)", resp.StatusCode, http.StatusText(resp.StatusCode), err)
+			return responseWithMeta, fmt.Errorf("%d %s; JSON response body malformed (%v)", resp.StatusCode, http.StatusText(resp.StatusCode), err)
 		}
-		return nil, resp, &ae
+		return responseWithMeta, &ae
 	}
 
 	if !isJSONResponse(resp) {
-		return nil, resp, errors.New("Content-Type not JSON")
+		return responseWithMeta, errors.New("Content-Type not JSON")
 	}
 
-	var result Result
-	if err := json.NewDecoder(resp.Body).Decode(&result); err != nil {
-		return nil, resp, err
+	var response Response
+	if err := json.NewDecoder(resp.Body).Decode(&response); err != nil {
+		return responseWithMeta, err
 	}
-	return &result, resp, nil
+	response.Meta = meta
+	return response, nil
 }
 
 // SetRequestID is an option for Search to set the X-Request-Id header on the

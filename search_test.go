@@ -76,7 +76,7 @@ func TestSearch(t *testing.T) {
 			t.Fatalf("NewClient: unexpected error: %v", err)
 		}
 
-		res, _, err := c.Search(context.Background(), nil)
+		res, err := c.Search(context.Background(), nil)
 		if err != nil {
 			t.Fatalf("Search: unexpected error: %v", err)
 		}
@@ -235,7 +235,7 @@ func TestSearch(t *testing.T) {
 				t.Fatalf("[%d] NewClient: unexpected error: %v", n, err)
 			}
 
-			_, _, err = c.Search(context.Background(), nil)
+			_, err = c.Search(context.Background(), nil)
 
 			if err == nil {
 				t.Fatalf("[%d], Search: got nil, want err", n)
@@ -265,7 +265,7 @@ func TestSearch(t *testing.T) {
 			t.Fatalf("NewClient: unexpected error: %v", err)
 		}
 
-		_, _, err = c.Search(context.Background(), nil)
+		_, err = c.Search(context.Background(), nil)
 
 		if err == nil {
 			t.Fatal("Search: got nil, want err")
@@ -366,12 +366,17 @@ func TestSearch(t *testing.T) {
 		}
 	})
 
-	t.Run("HTTPResponsePassthrough", func(t *testing.T) {
-		wantResp := &http.Response{
-			Body: ioutil.NopCloser(strings.NewReader("")),
-		}
+	t.Run("Meta", func(t *testing.T) {
 		var mockT mockTransport = func(r *http.Request) (*http.Response, error) {
-			return wantResp, nil
+			resp := &http.Response{
+				Body: ioutil.NopCloser(strings.NewReader(`{}`)),
+				Header: http.Header{
+					"X-Foo": {"foo-value"},
+				},
+				StatusCode: http.StatusTeapot,
+			}
+			resp.Header.Add("Content-Type", "application/json; charset=utf-8")
+			return resp, nil
 		}
 
 		hc := &http.Client{Transport: mockT}
@@ -381,10 +386,22 @@ func TestSearch(t *testing.T) {
 			t.Fatalf("NewClient: unexpected error: %v", err)
 		}
 
-		_, gotResp, _ := c.Search(context.Background(), nil)
+		res, err := c.Search(context.Background(), nil)
 
-		if gotResp != wantResp {
-			t.Errorf("got %p, want %p", gotResp, wantResp)
+		if err == nil {
+			t.Fatal("Search: got nil, want err")
+		}
+
+		if got, want := res.Meta.StatusCode, http.StatusTeapot; got != want {
+			t.Errorf("res.Meta.StatusCode = %d, want %d", got, want)
+		}
+
+		if res.Meta.Header == nil {
+			t.Fatalf("res.Meta.Header is nil, want not nil")
+		}
+
+		if got, want := res.Meta.Header.Get("X-Foo"), "foo-value"; got != want {
+			t.Errorf(`res.Meta.Header.Get("X-Foo") = %q, want %q`, got, want)
 		}
 	})
 }
