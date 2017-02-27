@@ -41,7 +41,7 @@ type Asset struct {
 	Events            []Event           `json:"events"`
 	HomeTeam          Team              `json:"hometeam"`
 	ItemsPublished    bool              `json:"items_published"`
-	KeywordsDk        []string          `json:"keywords_dk"`
+	KeywordsDa        []string          `json:"keywords_dk"`
 	KeywordsFi        []string          `json:"keywords_fi"`
 	KeywordsNb        []string          `json:"keywords_nb"`
 	KeywordsSv        []string          `json:"keywords_sv"`
