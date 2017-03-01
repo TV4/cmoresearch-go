@@ -192,12 +192,9 @@ type PublicationRights struct {
 // Season is a season of an asset, e.g. "Idol season 2".
 type Season struct {
 	HitCommon
-	ID          string `json:"id"`
-	Number      int    `json:"season_number"`
-	NumEpisodes int    `json:"number_of_episodes"`
-	Poster      Image  `json:"poster"`
-	Landscape   Image  `json:"landscape"`
-	Cinemascope Image  `json:"cinemascope"`
+	ID               string `json:"id"`
+	Number           int    `json:"season_number"`
+	NumberOfEpisodes int    `json:"number_of_episodes"`
 }
 
 // StartOverRights contains start-over rights.
