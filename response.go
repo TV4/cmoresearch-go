@@ -102,13 +102,6 @@ type Brand struct {
 	ID string `json:"id"`
 }
 
-// CatchUpRights contains catch-up rights.
-type CatchUpRights struct {
-	FastForward bool `json:"fast_forward"`
-	Rewind      bool `json:"rewind"`
-	Pause       bool `json:"pause"`
-}
-
 // Credit represents one entry in the credit list for an asset.
 type Credit struct {
 	Function string `json:"function"`
@@ -197,13 +190,6 @@ type Season struct {
 	NumberOfEpisodes int    `json:"number_of_episodes"`
 }
 
-// StartOverRights contains start-over rights.
-type StartOverRights struct {
-	FastForward bool `json:"fast_forward"`
-	Pause       bool `json:"pause"`
-	Rewind      bool `json:"rewind"`
-}
-
 // Tags bind otherwise unrelated assets.
 type Tags map[string][]string
 
@@ -211,10 +197,4 @@ type Tags map[string][]string
 type Team struct {
 	Name string `json:"name"`
 	NID  string `json:"nid"`
-}
-
-// Timeshift contains rights related to time.
-type Timeshift struct {
-	CatchUpRights   CatchUpRights   `json:"catch_up_rights"`
-	StartOverRights StartOverRights `json:"start_over_rights"`
 }
