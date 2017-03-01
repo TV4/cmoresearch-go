@@ -7,9 +7,9 @@ import (
 
 // Response represents the result as received from the search service.
 type Response struct {
-	TotalHits int      `json:"total_hits"`
-	Assets    []*Asset `json:"assets"`
-	Meta      Meta     `json:"-"`
+	TotalHits int    `json:"total_hits"`
+	Hits      []*Hit `json:"assets"`
+	Meta      Meta   `json:"-"`
 }
 
 // Meta contains request/response meta information
@@ -18,10 +18,9 @@ type Meta struct {
 	Header     http.Header
 }
 
-// Asset is a subset of an asset returned by the search service. Its structure
-// matches the response format of the search service.
-type Asset struct {
-	AssetCommon
+// Hit is an item returned by the search service.
+type Hit struct {
+	HitCommon
 	Arena             string            `json:"arena"`
 	AwayTeam          Team              `json:"awayteam"`
 	Brand             Brand             `json:"brand"`
@@ -56,8 +55,8 @@ type Asset struct {
 	VideoID           string            `json:"video_id"`
 }
 
-// AssetCommon the common archetype of all asset types.
-type AssetCommon struct {
+// HitCommon the common archetype of all hit types.
+type HitCommon struct {
 	Cinemascope        Image               `json:"cinemascope"`
 	Country            []string            `json:"country"`
 	ExternalReferences []ExternalReference `json:"external_references"`
@@ -99,7 +98,7 @@ type AssetCommon struct {
 
 // Brand is the brand of an asset, e.g. Idol or Harry Potter.
 type Brand struct {
-	AssetCommon
+	HitCommon
 	ID string `json:"id"`
 }
 
@@ -192,7 +191,7 @@ type PublicationRights struct {
 
 // Season is a season of an asset, e.g. "Idol season 2".
 type Season struct {
-	AssetCommon
+	HitCommon
 	ID          string `json:"id"`
 	Number      int    `json:"season_number"`
 	NumEpisodes int    `json:"number_of_episodes"`
