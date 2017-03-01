@@ -47,7 +47,6 @@ func (c *Client) Search(ctx context.Context, query url.Values, options ...func(r
 		StatusCode: resp.StatusCode,
 		Header:     resp.Header,
 	}
-	responseWithMeta := Response{Meta: meta}
 
 	defer func() {
 		io.CopyN(ioutil.Discard, resp.Body, 64)
@@ -56,22 +55,22 @@ func (c *Client) Search(ctx context.Context, query url.Values, options ...func(r
 
 	if resp.StatusCode != http.StatusOK {
 		if !isJSONResponse(resp) {
-			return responseWithMeta, fmt.Errorf("%d %s", resp.StatusCode, http.StatusText(resp.StatusCode))
+			return Response{Meta: meta}, fmt.Errorf("%d %s", resp.StatusCode, http.StatusText(resp.StatusCode))
 		}
 		var ae APIError
 		if err := json.NewDecoder(resp.Body).Decode(&ae); err != nil {
-			return responseWithMeta, fmt.Errorf("%d %s; JSON response body malformed (%v)", resp.StatusCode, http.StatusText(resp.StatusCode), err)
+			return Response{Meta: meta}, fmt.Errorf("%d %s; JSON response body malformed (%v)", resp.StatusCode, http.StatusText(resp.StatusCode), err)
 		}
-		return responseWithMeta, &ae
+		return Response{Meta: meta}, &ae
 	}
 
 	if !isJSONResponse(resp) {
-		return responseWithMeta, errors.New("Content-Type not JSON")
+		return Response{Meta: meta}, errors.New("Content-Type not JSON")
 	}
 
 	var response Response
 	if err := json.NewDecoder(resp.Body).Decode(&response); err != nil {
-		return responseWithMeta, err
+		return Response{Meta: meta}, err
 	}
 	response.Meta = meta
 	return response, nil
