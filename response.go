@@ -7,10 +7,13 @@ import (
 
 // Response represents the result as received from the search service.
 type Response struct {
-	TotalHits int    `json:"total_hits"`
-	Hits      []*Hit `json:"assets"`
-	Meta      Meta   `json:"-"`
+	TotalHits int
+	Hits      []Hit
+	Meta      Meta
 }
+
+// Hit is a search hit. It holds e.g. Asset or Series.
+type Hit interface{}
 
 // Meta contains request/response meta information
 type Meta struct {
@@ -18,88 +21,157 @@ type Meta struct {
 	Header     http.Header
 }
 
-// Hit is an item returned by the search service.
-type Hit struct {
-	HitCommon
-	Arena             string            `json:"arena"`
-	AwayTeam          Team              `json:"awayteam"`
-	Brand             Brand             `json:"brand"`
-	ContentSource     string            `json:"content_source"`
-	Credits           []Credit          `json:"credits"`
-	DRMRestrictions   bool              `json:"drm_restrictions"`
-	Duration          int               `json:"duration"`
-	EpisodeNumber     int               `json:"episode_number"`
-	Events            []Event           `json:"events"`
-	HomeTeam          Team              `json:"hometeam"`
-	ItemsPublished    bool              `json:"items_published"`
-	KeywordsDa        []string          `json:"keywords_dk"`
-	KeywordsFi        []string          `json:"keywords_fi"`
-	KeywordsNb        []string          `json:"keywords_nb"`
-	KeywordsSv        []string          `json:"keywords_sv"`
-	Live              bool              `json:"live"`
-	LiveEventEnd      time.Time         `json:"live_event_end"`
-	LogoAwayTeam      Image             `json:"logoawayteam"`
-	LogoHomeTeam      Image             `json:"logohometeam"`
-	MLTNIDs           []string          `json:"mlt_nids"`
-	MLTTags           string            `json:"mlt_tags"`
-	OriginalTitle     OriginalTitle     `json:"original_title"`
-	ParentalRatings   []ParentalRating  `json:"parental_ratings"`
-	ProductionYear    string            `json:"production_year"`
-	PublicationRights PublicationRights `json:"publication_rights"`
-	Season            Season            `json:"season"`
-	SpokenLanguages   []string          `json:"spoken_languages"`
-	Tags              Tags              `json:"tags"`
-	Timestamp         string            `json:"timestamp"`
-	Type              string            `json:"type"`
-	VMANID            string            `json:"vman_id"`
-	VideoID           string            `json:"video_id"`
+// Asset is an asset hit returned by the search service.
+type Asset struct {
+	Arena                 string              `json:"arena"`
+	AwayTeam              Team                `json:"awayteam"`
+	Brand                 Brand               `json:"brand"`
+	Cinemascope           Image               `json:"cinemascope"`
+	ContentSource         string              `json:"content_source"`
+	Country               []string            `json:"country"`
+	Credits               []Credit            `json:"credits"`
+	DRMRestrictions       bool                `json:"drm_restrictions"`
+	DescriptionExtendedDa string              `json:"description_extended_da"`
+	DescriptionExtendedFi string              `json:"description_extended_fi"`
+	DescriptionExtendedNb string              `json:"description_extended_nb"`
+	DescriptionExtendedSv string              `json:"description_extended_sv"`
+	DescriptionLongDa     string              `json:"description_long_da"`
+	DescriptionLongFi     string              `json:"description_long_fi"`
+	DescriptionLongNb     string              `json:"description_long_nb"`
+	DescriptionLongSv     string              `json:"description_long_sv"`
+	DescriptionMediumDa   string              `json:"description_medium_da"`
+	DescriptionMediumFi   string              `json:"description_medium_fi"`
+	DescriptionMediumNb   string              `json:"description_medium_nb"`
+	DescriptionMediumSv   string              `json:"description_medium_sv"`
+	DescriptionShortDa    string              `json:"description_short_da"`
+	DescriptionShortFi    string              `json:"description_short_fi"`
+	DescriptionShortNb    string              `json:"description_short_nb"`
+	DescriptionShortSv    string              `json:"description_short_sv"`
+	DescriptionTinyDa     string              `json:"description_tiny_da"`
+	DescriptionTinyFi     string              `json:"description_tiny_fi"`
+	DescriptionTinyNb     string              `json:"description_tiny_nb"`
+	DescriptionTinySv     string              `json:"description_tiny_sv"`
+	Duration              int                 `json:"duration"`
+	EpisodeNumber         int                 `json:"episode_number"`
+	Events                []Event             `json:"events"`
+	ExternalReferences    []ExternalReference `json:"external_references"`
+	Genres                []Genre             `json:"genres"`
+	HomeTeam              Team                `json:"hometeam"`
+	ItemsPublished        bool                `json:"items_published"`
+	KeywordsDa            []string            `json:"keywords_dk"`
+	KeywordsFi            []string            `json:"keywords_fi"`
+	KeywordsNb            []string            `json:"keywords_nb"`
+	KeywordsSv            []string            `json:"keywords_sv"`
+	Landscape             Image               `json:"landscape"`
+	Live                  bool                `json:"live"`
+	LiveEventEnd          time.Time           `json:"live_event_end"`
+	LogoAwayTeam          Image               `json:"logoawayteam"`
+	LogoHomeTeam          Image               `json:"logohometeam"`
+	MLTNIDs               []string            `json:"mlt_nids"`
+	MLTTags               string              `json:"mlt_tags"`
+	OriginalTitle         OriginalTitle       `json:"original_title"`
+	ParentalRatings       []ParentalRating    `json:"parental_ratings"`
+	Poster                Image               `json:"poster"`
+	ProductionYear        string              `json:"production_year"`
+	PublicationRights     PublicationRights   `json:"publication_rights"`
+	Season                Season              `json:"season"`
+	SpokenLanguages       []string            `json:"spoken_languages"`
+	Studio                string              `json:"studio"`
+	Tags                  Tags                `json:"tags"`
+	Timestamp             string              `json:"timestamp"`
+	TitleDa               string              `json:"title_da"`
+	TitleFi               string              `json:"title_fi"`
+	TitleNb               string              `json:"title_nb"`
+	TitleSv               string              `json:"title_sv"`
+	Type                  string              `json:"type"`
+	VMANID                string              `json:"vman_id"`
+	VideoID               string              `json:"video_id"`
 }
 
-// HitCommon the common archetype of all hit types.
-type HitCommon struct {
-	Cinemascope        Image               `json:"cinemascope"`
-	Country            []string            `json:"country"`
-	ExternalReferences []ExternalReference `json:"external_references"`
-	Genres             []Genre             `json:"genres"`
-	Landscape          Image               `json:"landscape"`
-	Poster             Image               `json:"poster"`
-	Studio             string              `json:"studio"`
-
-	TitleDa string `json:"title_da"`
-	TitleFi string `json:"title_fi"`
-	TitleNb string `json:"title_nb"`
-	TitleSv string `json:"title_sv"`
-
-	DescriptionExtendedDa string `json:"description_extended_da"`
-	DescriptionExtendedFi string `json:"description_extended_fi"`
-	DescriptionExtendedNb string `json:"description_extended_nb"`
-	DescriptionExtendedSv string `json:"description_extended_sv"`
-
-	DescriptionLongDa string `json:"description_long_da"`
-	DescriptionLongFi string `json:"description_long_fi"`
-	DescriptionLongNb string `json:"description_long_nb"`
-	DescriptionLongSv string `json:"description_long_sv"`
-
-	DescriptionMediumDa string `json:"description_medium_da"`
-	DescriptionMediumFi string `json:"description_medium_fi"`
-	DescriptionMediumNb string `json:"description_medium_nb"`
-	DescriptionMediumSv string `json:"description_medium_sv"`
-
-	DescriptionShortDa string `json:"description_short_da"`
-	DescriptionShortFi string `json:"description_short_fi"`
-	DescriptionShortNb string `json:"description_short_nb"`
-	DescriptionShortSv string `json:"description_short_sv"`
-
-	DescriptionTinyDa string `json:"description_tiny_da"`
-	DescriptionTinyFi string `json:"description_tiny_fi"`
-	DescriptionTinyNb string `json:"description_tiny_nb"`
-	DescriptionTinySv string `json:"description_tiny_sv"`
+// Series is an series hit returned by the search service.
+type Series struct {
+	BrandID               string              `json:"brand_id"`
+	Cinemascope           Image               `json:"cinemascope"`
+	ContentSource         string              `json:"content_source"`
+	Country               []string            `json:"country"`
+	Credits               []Credit            `json:"credits"`
+	DescriptionExtendedDa string              `json:"description_extended_da"`
+	DescriptionExtendedFi string              `json:"description_extended_fi"`
+	DescriptionExtendedNb string              `json:"description_extended_nb"`
+	DescriptionExtendedSv string              `json:"description_extended_sv"`
+	DescriptionLongDa     string              `json:"description_long_da"`
+	DescriptionLongFi     string              `json:"description_long_fi"`
+	DescriptionLongNb     string              `json:"description_long_nb"`
+	DescriptionLongSv     string              `json:"description_long_sv"`
+	DescriptionMediumDa   string              `json:"description_medium_da"`
+	DescriptionMediumFi   string              `json:"description_medium_fi"`
+	DescriptionMediumNb   string              `json:"description_medium_nb"`
+	DescriptionMediumSv   string              `json:"description_medium_sv"`
+	DescriptionShortDa    string              `json:"description_short_da"`
+	DescriptionShortFi    string              `json:"description_short_fi"`
+	DescriptionShortNb    string              `json:"description_short_nb"`
+	DescriptionShortSv    string              `json:"description_short_sv"`
+	DescriptionTinyDa     string              `json:"description_tiny_da"`
+	DescriptionTinyFi     string              `json:"description_tiny_fi"`
+	DescriptionTinyNb     string              `json:"description_tiny_nb"`
+	DescriptionTinySv     string              `json:"description_tiny_sv"`
+	Events                []Event             `json:"events"`
+	ExternalReferences    []ExternalReference `json:"external_references"`
+	Genres                []Genre             `json:"genres"`
+	ID                    string              `json:"id"`
+	KeywordsDa            []string            `json:"keywords_dk"`
+	KeywordsFi            []string            `json:"keywords_fi"`
+	KeywordsNb            []string            `json:"keywords_nb"`
+	KeywordsSv            []string            `json:"keywords_sv"`
+	Landscape             Image               `json:"landscape"`
+	MLTTags               string              `json:"mlt_tags"`
+	Poster                Image               `json:"poster"`
+	Seasons               []int               `json:"seasons"`
+	SpokenLanguages       []string            `json:"spoken_languages"`
+	Studio                string              `json:"studio"`
+	Tags                  Tags                `json:"tags"`
+	Timestamp             string              `json:"timestamp"`
+	TitleDa               string              `json:"title_da"`
+	TitleFi               string              `json:"title_fi"`
+	TitleNb               string              `json:"title_nb"`
+	TitleSv               string              `json:"title_sv"`
+	Type                  string              `json:"type"`
 }
 
 // Brand is the brand of an asset, e.g. Idol or Harry Potter.
 type Brand struct {
-	HitCommon
-	ID string `json:"id"`
+	Cinemascope           Image               `json:"cinemascope"`
+	Country               []string            `json:"country"`
+	DescriptionExtendedDa string              `json:"description_extended_da"`
+	DescriptionExtendedFi string              `json:"description_extended_fi"`
+	DescriptionExtendedNb string              `json:"description_extended_nb"`
+	DescriptionExtendedSv string              `json:"description_extended_sv"`
+	DescriptionLongDa     string              `json:"description_long_da"`
+	DescriptionLongFi     string              `json:"description_long_fi"`
+	DescriptionLongNb     string              `json:"description_long_nb"`
+	DescriptionLongSv     string              `json:"description_long_sv"`
+	DescriptionMediumDa   string              `json:"description_medium_da"`
+	DescriptionMediumFi   string              `json:"description_medium_fi"`
+	DescriptionMediumNb   string              `json:"description_medium_nb"`
+	DescriptionMediumSv   string              `json:"description_medium_sv"`
+	DescriptionShortDa    string              `json:"description_short_da"`
+	DescriptionShortFi    string              `json:"description_short_fi"`
+	DescriptionShortNb    string              `json:"description_short_nb"`
+	DescriptionShortSv    string              `json:"description_short_sv"`
+	DescriptionTinyDa     string              `json:"description_tiny_da"`
+	DescriptionTinyFi     string              `json:"description_tiny_fi"`
+	DescriptionTinyNb     string              `json:"description_tiny_nb"`
+	DescriptionTinySv     string              `json:"description_tiny_sv"`
+	ExternalReferences    []ExternalReference `json:"external_references"`
+	Genres                []Genre             `json:"genres"`
+	ID                    string              `json:"id"`
+	Landscape             Image               `json:"landscape"`
+	Poster                Image               `json:"poster"`
+	Studio                string              `json:"studio"`
+	TitleDa               string              `json:"title_da"`
+	TitleFi               string              `json:"title_fi"`
+	TitleNb               string              `json:"title_nb"`
+	TitleSv               string              `json:"title_sv"`
 }
 
 // Credit represents one entry in the credit list for an asset.
@@ -184,10 +256,40 @@ type PublicationRights struct {
 
 // Season is a season of an asset, e.g. "Idol season 2".
 type Season struct {
-	HitCommon
-	ID               string `json:"id"`
-	Number           int    `json:"season_number"`
-	NumberOfEpisodes int    `json:"number_of_episodes"`
+	Cinemascope           Image               `json:"cinemascope"`
+	Country               []string            `json:"country"`
+	DescriptionExtendedDa string              `json:"description_extended_da"`
+	DescriptionExtendedFi string              `json:"description_extended_fi"`
+	DescriptionExtendedNb string              `json:"description_extended_nb"`
+	DescriptionExtendedSv string              `json:"description_extended_sv"`
+	DescriptionLongDa     string              `json:"description_long_da"`
+	DescriptionLongFi     string              `json:"description_long_fi"`
+	DescriptionLongNb     string              `json:"description_long_nb"`
+	DescriptionLongSv     string              `json:"description_long_sv"`
+	DescriptionMediumDa   string              `json:"description_medium_da"`
+	DescriptionMediumFi   string              `json:"description_medium_fi"`
+	DescriptionMediumNb   string              `json:"description_medium_nb"`
+	DescriptionMediumSv   string              `json:"description_medium_sv"`
+	DescriptionShortDa    string              `json:"description_short_da"`
+	DescriptionShortFi    string              `json:"description_short_fi"`
+	DescriptionShortNb    string              `json:"description_short_nb"`
+	DescriptionShortSv    string              `json:"description_short_sv"`
+	DescriptionTinyDa     string              `json:"description_tiny_da"`
+	DescriptionTinyFi     string              `json:"description_tiny_fi"`
+	DescriptionTinyNb     string              `json:"description_tiny_nb"`
+	DescriptionTinySv     string              `json:"description_tiny_sv"`
+	ExternalReferences    []ExternalReference `json:"external_references"`
+	Genres                []Genre             `json:"genres"`
+	ID                    string              `json:"id"`
+	Landscape             Image               `json:"landscape"`
+	Number                int                 `json:"season_number"`
+	NumberOfEpisodes      int                 `json:"number_of_episodes"`
+	Poster                Image               `json:"poster"`
+	Studio                string              `json:"studio"`
+	TitleDa               string              `json:"title_da"`
+	TitleFi               string              `json:"title_fi"`
+	TitleNb               string              `json:"title_nb"`
+	TitleSv               string              `json:"title_sv"`
 }
 
 // Tags bind otherwise unrelated assets.

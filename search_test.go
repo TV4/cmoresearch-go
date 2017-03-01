@@ -212,3 +212,76 @@ func TestSearch(t *testing.T) {
 		}
 	})
 }
+
+func TestMakeResponse(t *testing.T) {
+	t.Run("Success", func(t *testing.T) {
+		resp := &http.Response{
+			Body: ioutil.NopCloser(strings.NewReader(`
+		{
+			"total_hits": 100,
+			"hits": [
+				{ "type": "movie" },
+				{ "type": "series" },
+				{ "type": "unknown" }
+			]
+		}
+		`)),
+			Header:     http.Header{"Foo": {"Bar"}},
+			StatusCode: http.StatusTeapot,
+		}
+
+		response, err := makeResponse(resp)
+		if err != nil {
+			t.Fatalf("unexpected error: %v", err)
+		}
+
+		if got, want := response.TotalHits, 100; got != want {
+			t.Errorf("response.TotalHits = %d, want %d", got, want)
+		}
+
+		if got, want := len(response.Hits), 3; got != want {
+			t.Fatalf("len(response.Hits) = %d, want %d", got, want)
+		}
+
+		if _, ok := response.Hits[0].(*Asset); !ok {
+			t.Errorf("response.Hits[0] is a %T, want a %T", response.Hits[0], &Asset{})
+		}
+
+		if _, ok := response.Hits[1].(*Series); !ok {
+			t.Errorf("response.Hits[1] is a %T, want a %T", response.Hits[1], &Series{})
+		}
+
+		if _, ok := response.Hits[2].(*Asset); !ok {
+			t.Errorf("response.Hits[2] is a %T, want a %T", response.Hits[2], &Asset{})
+		}
+
+		if got, want := response.Meta.StatusCode, http.StatusTeapot; got != want {
+			t.Errorf("response.Meta.StatusCode = %d, want %d", got, want)
+		}
+
+		if got, want := response.Meta.Header.Get("Foo"), "Bar"; got != want {
+			t.Errorf(`response.Meta.Header.Get("Foo") = %q, want %q`, got, want)
+		}
+	})
+
+	t.Run("BodyNotJSON", func(t *testing.T) {
+		resp := &http.Response{
+			Body:       ioutil.NopCloser(strings.NewReader("not-json")),
+			Header:     http.Header{"Foo": {"Bar"}},
+			StatusCode: http.StatusTeapot,
+		}
+
+		response, err := makeResponse(resp)
+		if err == nil {
+			t.Fatal("got nil, want error")
+		}
+
+		if got, want := response.Meta.StatusCode, http.StatusTeapot; got != want {
+			t.Errorf("response.Meta.StatusCode = %d, want %d", got, want)
+		}
+
+		if got, want := response.Meta.Header.Get("Foo"), "Bar"; got != want {
+			t.Errorf(`response.Meta.Header.Get("Foo") = %q, want %q`, got, want)
+		}
+	})
+}

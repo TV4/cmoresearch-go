@@ -68,11 +68,10 @@ func (c *Client) Search(ctx context.Context, query url.Values, options ...func(r
 		return Response{Meta: meta}, errors.New("Content-Type not JSON")
 	}
 
-	var response Response
-	if err := json.NewDecoder(resp.Body).Decode(&response); err != nil {
+	response, err := makeResponse(resp)
+	if err != nil {
 		return Response{Meta: meta}, err
 	}
-	response.Meta = meta
 	return response, nil
 }
 
@@ -82,4 +81,46 @@ func SetRequestID(requestID string) func(*http.Request) {
 	return func(r *http.Request) {
 		r.Header.Set("X-Request-Id", requestID)
 	}
+}
+
+func makeResponse(resp *http.Response) (Response, error) {
+	meta := Meta{
+		StatusCode: resp.StatusCode,
+		Header:     resp.Header,
+	}
+
+	var v struct {
+		TotalHits int               `json:"total_hits"`
+		Hits      []json.RawMessage `json:"hits"`
+	}
+
+	if err := json.NewDecoder(resp.Body).Decode(&v); err != nil {
+		return Response{Meta: meta}, err
+	}
+
+	response := Response{TotalHits: v.TotalHits}
+
+	for _, h := range v.Hits {
+		var t struct {
+			Type string
+		}
+
+		if json.Unmarshal(h, &t) == nil {
+			switch t.Type {
+			case "series":
+				var series Series
+				if json.Unmarshal(h, &series) == nil {
+					response.Hits = append(response.Hits, &series)
+				}
+			default:
+				var asset Asset
+				if json.Unmarshal(h, &asset) == nil {
+					response.Hits = append(response.Hits, &asset)
+				}
+			}
+		}
+	}
+
+	response.Meta = meta
+	return response, nil
 }
