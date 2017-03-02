@@ -68,7 +68,6 @@ type Asset struct {
 	LogoAwayTeam          Image               `json:"logoawayteam"`
 	LogoHomeTeam          Image               `json:"logohometeam"`
 	MLTNIDs               []string            `json:"mlt_nids"`
-	MLTTags               string              `json:"mlt_tags"`
 	OriginalTitle         OriginalTitle       `json:"original_title"`
 	ParentalRatings       []ParentalRating    `json:"parental_ratings"`
 	Poster                Image               `json:"poster"`
@@ -124,7 +123,6 @@ type Series struct {
 	KeywordsNb            []string            `json:"keywords_nb"`
 	KeywordsSv            []string            `json:"keywords_sv"`
 	Landscape             Image               `json:"landscape"`
-	MLTTags               string              `json:"mlt_tags"`
 	Poster                Image               `json:"poster"`
 	Seasons               []int               `json:"seasons"`
 	SpokenLanguages       []string            `json:"spoken_languages"`
