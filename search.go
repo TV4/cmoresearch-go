@@ -91,7 +91,7 @@ func makeResponse(resp *http.Response) (Response, error) {
 
 	var v struct {
 		TotalHits int               `json:"total_hits"`
-		Hits      []json.RawMessage `json:"hits"`
+		Hits      []json.RawMessage `json:"assets"`
 	}
 
 	if err := json.NewDecoder(resp.Body).Decode(&v); err != nil {

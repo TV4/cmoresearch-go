@@ -219,7 +219,7 @@ func TestMakeResponse(t *testing.T) {
 			Body: ioutil.NopCloser(strings.NewReader(`
 		{
 			"total_hits": 100,
-			"hits": [
+			"assets": [
 				{ "type": "movie" },
 				{ "type": "series" },
 				{ "type": "unknown" }
