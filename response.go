@@ -58,10 +58,10 @@ type Asset struct {
 	Genres                []Genre             `json:"genres"`
 	HomeTeam              Team                `json:"hometeam"`
 	ItemsPublished        bool                `json:"items_published"`
-	KeywordsDa            []string            `json:"keywords_dk"`
-	KeywordsFi            []string            `json:"keywords_fi"`
-	KeywordsNb            []string            `json:"keywords_nb"`
-	KeywordsSv            []string            `json:"keywords_sv"`
+	KeywordsDa            []Keyword           `json:"keywords_da"`
+	KeywordsFi            []Keyword           `json:"keywords_fi"`
+	KeywordsNb            []Keyword           `json:"keywords_nb"`
+	KeywordsSv            []Keyword           `json:"keywords_sv"`
 	Landscape             Image               `json:"landscape"`
 	League                string              `json:"league"`
 	LeagueDa              string              `json:"league_da"`
@@ -123,10 +123,10 @@ type Series struct {
 	ExternalReferences    []ExternalReference `json:"external_references"`
 	Genres                []Genre             `json:"genres"`
 	ID                    string              `json:"id"`
-	KeywordsDa            []string            `json:"keywords_dk"`
-	KeywordsFi            []string            `json:"keywords_fi"`
-	KeywordsNb            []string            `json:"keywords_nb"`
-	KeywordsSv            []string            `json:"keywords_sv"`
+	KeywordsDa            []Keyword           `json:"keywords_da"`
+	KeywordsFi            []Keyword           `json:"keywords_fi"`
+	KeywordsNb            []Keyword           `json:"keywords_nb"`
+	KeywordsSv            []Keyword           `json:"keywords_sv"`
 	Landscape             Image               `json:"landscape"`
 	Poster                Image               `json:"poster"`
 	Seasons               []int               `json:"seasons"`
@@ -216,6 +216,12 @@ type Image struct {
 	Copyright     string           `json:"copyright"`
 	Localizations []LocalizedImage `json:"localizations"`
 	URL           string           `json:"url"`
+}
+
+// Keyword holds a URL-friendly ID and a human-friendly text for a keyword.
+type Keyword struct {
+	NID  string `json:"nid"`
+	Text string `json:"text"`
 }
 
 // LocalizedImage is a localized image.
