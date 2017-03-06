@@ -24,26 +24,12 @@ var (
 // there is an error while setting up or sending the request, but also if the
 // response status is not HTTP 200 OK or the response content is not JSON.
 func (c *Client) Search(ctx context.Context, query url.Values, options ...func(r *http.Request)) (Response, error) {
-	rel, err := url.Parse(path.Join(c.baseURL.Path, "/search"))
+	req, err := c.newSearchRequest(ctx, query, options...)
 	if err != nil {
 		return Response{}, err
 	}
 
-	u := c.baseURL.ResolveReference(rel)
-	u.RawQuery = query.Encode()
-
-	req, err := http.NewRequest("GET", u.String(), nil)
-	if err != nil {
-		return Response{}, err
-	}
-
-	req = req.WithContext(ctx)
-
-	for _, o := range options {
-		o(req)
-	}
-
-	c.logf("GET %s", u)
+	c.logf("GET %s", req.URL)
 
 	resp, err := c.httpClient.Do(req)
 
@@ -81,6 +67,29 @@ func (c *Client) Search(ctx context.Context, query url.Values, options ...func(r
 		return Response{Meta: meta}, err
 	}
 	return response, nil
+}
+
+func (c *Client) newSearchRequest(ctx context.Context, query url.Values, options ...func(r *http.Request)) (*http.Request, error) {
+	rel, err := url.Parse(path.Join(c.baseURL.Path, "/search"))
+	if err != nil {
+		return nil, err
+	}
+
+	u := c.baseURL.ResolveReference(rel)
+	u.RawQuery = query.Encode()
+
+	req, err := http.NewRequest("GET", u.String(), nil)
+	if err != nil {
+		return req, err
+	}
+
+	req = req.WithContext(ctx)
+
+	for _, o := range options {
+		o(req)
+	}
+
+	return req, nil
 }
 
 // SetRequestID is an option for Search to set the X-Request-Id header on the

@@ -89,90 +89,6 @@ func TestSearch(t *testing.T) {
 		}
 	})
 
-	t.Run("ArbitraryOption", func(t *testing.T) {
-		var fooHeader string
-		var mockT mockTransport = func(r *http.Request) (*http.Response, error) {
-			resp := &http.Response{
-				Body:       ioutil.NopCloser(strings.NewReader("")),
-				StatusCode: http.StatusOK,
-			}
-			fooHeader = r.Header.Get("Foo")
-			return resp, nil
-		}
-
-		hc := &http.Client{Transport: mockT}
-
-		c, err := NewClient(SetBaseURL("/"), SetHTTPClient(hc))
-		if err != nil {
-			t.Fatalf("NewClient: unexpected error: %v", err)
-		}
-
-		option := func(r *http.Request) {
-			r.Header.Set("Foo", "foo-header")
-		}
-
-		c.Search(context.Background(), nil, option)
-
-		if got, want := fooHeader, "foo-header"; got != want {
-			t.Errorf("option not set; fooHeader = %q, want %q", got, want)
-		}
-	})
-
-	t.Run("SetRequestIDOption", func(t *testing.T) {
-		var requestID string
-		var mockT mockTransport = func(r *http.Request) (*http.Response, error) {
-			resp := &http.Response{
-				Body:       ioutil.NopCloser(strings.NewReader("")),
-				StatusCode: http.StatusOK,
-			}
-			requestID = r.Header.Get("X-Request-Id")
-			return resp, nil
-		}
-
-		hc := &http.Client{Transport: mockT}
-
-		c, err := NewClient(SetBaseURL("/"), SetHTTPClient(hc))
-		if err != nil {
-			t.Fatalf("NewClient: unexpected error: %v", err)
-		}
-
-		option := SetRequestID("request-id")
-		c.Search(context.Background(), nil, option)
-
-		if got, want := requestID, "request-id"; got != want {
-			t.Errorf("option not set; requestID = %q, want %q", got, want)
-		}
-	})
-
-	t.Run("QueryString", func(t *testing.T) {
-		var queryString string
-		var mockT mockTransport = func(r *http.Request) (*http.Response, error) {
-			resp := &http.Response{
-				Body:       ioutil.NopCloser(strings.NewReader("")),
-				StatusCode: http.StatusOK,
-			}
-			queryString = r.URL.Query().Encode()
-			return resp, nil
-		}
-
-		hc := &http.Client{Transport: mockT}
-
-		c, err := NewClient(SetBaseURL("/"), SetHTTPClient(hc))
-		if err != nil {
-			t.Fatalf("NewClient: unexpected error: %v", err)
-		}
-
-		query := url.Values{}
-		query.Add("foo", "123")
-		query.Add("bar&", "234 567")
-		query.Add("baz", "345")
-		c.Search(context.Background(), query)
-
-		if got, want := queryString, "bar%26=234+567&baz=345&foo=123"; got != want {
-			t.Errorf("queryString = %q, want %q", got, want)
-		}
-	})
-
 	t.Run("Meta", func(t *testing.T) {
 		var mockT mockTransport = func(r *http.Request) (*http.Response, error) {
 			resp := &http.Response{
@@ -209,6 +125,56 @@ func TestSearch(t *testing.T) {
 
 		if got, want := res.Meta.StatusCode, http.StatusTeapot; got != want {
 			t.Errorf("res.Meta.StatusCode = %d, want %d", got, want)
+		}
+	})
+}
+
+func TestNewSearchRequest(t *testing.T) {
+	t.Run("ArbitraryOption", func(t *testing.T) {
+		c, _ := NewClient()
+
+		option := func(req *http.Request) {
+			req.Header.Set("Foo", "foo-header")
+		}
+
+		req, err := c.newSearchRequest(context.Background(), nil, option)
+		if err != nil {
+			t.Fatalf("unexpected error: %v", err)
+		}
+
+		if got, want := req.Header.Get("Foo"), "foo-header"; got != want {
+			t.Errorf("Foo = %q, want %q", got, want)
+		}
+	})
+
+	t.Run("SetRequestIDOption", func(t *testing.T) {
+		c, _ := NewClient()
+
+		req, err := c.newSearchRequest(context.Background(), nil, SetRequestID("request-id"))
+		if err != nil {
+			t.Fatalf("unexpected error: %v", err)
+		}
+
+		if got, want := req.Header.Get("X-Request-Id"), "request-id"; got != want {
+			t.Errorf("X-Request-Id = %q, want %q", got, want)
+		}
+	})
+
+	t.Run("QueryString", func(t *testing.T) {
+		c, _ := NewClient()
+
+		query := url.Values{}
+		query.Add("foo", "123")
+		query.Add("bar&", "234 567")
+		query.Add("baz", "345")
+
+		req, err := c.newSearchRequest(context.Background(), query)
+		if err != nil {
+			t.Fatalf("unexpected error: %v", err)
+		}
+
+		if got, want := req.URL.Query().Encode(), "bar%26=234+567&baz=345&foo=123"; got != want {
+			t.Errorf("queryString = %q, want %q", got, want)
 		}
 	})
 }
