@@ -63,6 +63,11 @@ type Asset struct {
 	KeywordsNb            []string            `json:"keywords_nb"`
 	KeywordsSv            []string            `json:"keywords_sv"`
 	Landscape             Image               `json:"landscape"`
+	League                string              `json:"league"`
+	LeagueDa              string              `json:"league_da"`
+	LeagueFi              string              `json:"league_fi"`
+	LeagueNb              string              `json:"league_nb"`
+	LeagueSv              string              `json:"league_sv"`
 	Live                  bool                `json:"live"`
 	LiveEventEnd          time.Time           `json:"live_event_end"`
 	LogoAwayTeam          Image               `json:"logoawayteam"`
