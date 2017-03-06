@@ -12,6 +12,11 @@ import (
 	"path"
 )
 
+var (
+	// ErrContentTypeNotJSON is returned if a response does not have Content-Type application/json
+	ErrContentTypeNotJSON = errors.New("Content-Type not JSON")
+)
+
 // Search performs a search and returns the response. An error is returned if
 // there is an error while setting up or sending the request, but also if the
 // response status is not HTTP 200 OK or the response content is not JSON.
@@ -65,7 +70,7 @@ func (c *Client) Search(ctx context.Context, query url.Values, options ...func(r
 	}
 
 	if !isJSONResponse(resp) {
-		return Response{Meta: meta}, errors.New("Content-Type not JSON")
+		return Response{Meta: meta}, ErrContentTypeNotJSON
 	}
 
 	response, err := makeResponse(resp)
