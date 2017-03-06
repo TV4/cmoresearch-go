@@ -199,16 +199,16 @@ func TestSearch(t *testing.T) {
 			t.Fatal("Search: got nil, want err")
 		}
 
-		if got, want := res.Meta.StatusCode, http.StatusTeapot; got != want {
-			t.Errorf("res.Meta.StatusCode = %d, want %d", got, want)
-		}
-
 		if res.Meta.Header == nil {
 			t.Fatalf("res.Meta.Header is nil, want not nil")
 		}
 
 		if got, want := res.Meta.Header.Get("X-Foo"), "foo-value"; got != want {
 			t.Errorf(`res.Meta.Header.Get("X-Foo") = %q, want %q`, got, want)
+		}
+
+		if got, want := res.Meta.StatusCode, http.StatusTeapot; got != want {
+			t.Errorf("res.Meta.StatusCode = %d, want %d", got, want)
 		}
 	})
 }
@@ -255,12 +255,12 @@ func TestMakeResponse(t *testing.T) {
 			t.Errorf("response.Hits[2] is a %T, want a %T", response.Hits[2], &Asset{})
 		}
 
-		if got, want := response.Meta.StatusCode, http.StatusTeapot; got != want {
-			t.Errorf("response.Meta.StatusCode = %d, want %d", got, want)
-		}
-
 		if got, want := response.Meta.Header.Get("Foo"), "Bar"; got != want {
 			t.Errorf(`response.Meta.Header.Get("Foo") = %q, want %q`, got, want)
+		}
+
+		if got, want := response.Meta.StatusCode, http.StatusTeapot; got != want {
+			t.Errorf("response.Meta.StatusCode = %d, want %d", got, want)
 		}
 	})
 
@@ -276,12 +276,12 @@ func TestMakeResponse(t *testing.T) {
 			t.Fatal("got nil, want error")
 		}
 
-		if got, want := response.Meta.StatusCode, http.StatusTeapot; got != want {
-			t.Errorf("response.Meta.StatusCode = %d, want %d", got, want)
-		}
-
 		if got, want := response.Meta.Header.Get("Foo"), "Bar"; got != want {
 			t.Errorf(`response.Meta.Header.Get("Foo") = %q, want %q`, got, want)
+		}
+
+		if got, want := response.Meta.StatusCode, http.StatusTeapot; got != want {
+			t.Errorf("response.Meta.StatusCode = %d, want %d", got, want)
 		}
 	})
 }
