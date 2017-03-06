@@ -98,29 +98,35 @@ func makeResponse(resp *http.Response) (Response, error) {
 		return Response{Meta: meta}, err
 	}
 
-	response := Response{TotalHits: v.TotalHits}
+	response := Response{
+		TotalHits: v.TotalHits,
+		Meta:      meta,
+	}
 
 	for _, h := range v.Hits {
 		var t struct {
 			Type string
 		}
 
-		if json.Unmarshal(h, &t) == nil {
-			switch t.Type {
-			case "series":
-				var series Series
-				if json.Unmarshal(h, &series) == nil {
-					response.Hits = append(response.Hits, &series)
-				}
-			default:
-				var asset Asset
-				if json.Unmarshal(h, &asset) == nil {
-					response.Hits = append(response.Hits, &asset)
-				}
+		if err := json.Unmarshal(h, &t); err != nil {
+			return response, err
+		}
+
+		switch t.Type {
+		case "series":
+			var series Series
+			if err := json.Unmarshal(h, &series); err != nil {
+				return response, err
 			}
+			response.Hits = append(response.Hits, &series)
+		default:
+			var asset Asset
+			if err := json.Unmarshal(h, &asset); err != nil {
+				return response, err
+			}
+			response.Hits = append(response.Hits, &asset)
 		}
 	}
 
-	response.Meta = meta
 	return response, nil
 }
