@@ -13,6 +13,9 @@ import (
 )
 
 var (
+	// ErrTypeMissing is returned when a search hit has an empty type field
+	ErrTypeMissing = errors.New("type missing")
+
 	// ErrContentTypeNotJSON is returned if a response does not have Content-Type application/json
 	ErrContentTypeNotJSON = errors.New("Content-Type not JSON")
 )
@@ -118,6 +121,8 @@ func makeResponse(resp *http.Response) (Response, error) {
 		}
 
 		switch t.Type {
+		case "":
+			return response, ErrTypeMissing
 		case "series":
 			var series Series
 			if err := json.Unmarshal(h, &series); err != nil {

@@ -348,6 +348,40 @@ func TestMakeResponse(t *testing.T) {
 		}
 	})
 
+	t.Run("TypeMissing", func(t *testing.T) {
+		resp := &http.Response{
+			Body: ioutil.NopCloser(strings.NewReader(`
+				{
+					"total_hits": 100,
+					"assets": [{}]
+				}
+		`)),
+			Header:     http.Header{"Foo": {"Bar"}},
+			StatusCode: http.StatusTeapot,
+		}
+
+		response, err := makeResponse(resp)
+		if err == nil {
+			t.Fatal("got nil, want error")
+		}
+
+		if got, want := response.TotalHits, 100; got != want {
+			t.Errorf("response.TotalHits = %d, want %d", got, want)
+		}
+
+		if got, want := len(response.Hits), 0; got != want {
+			t.Errorf("len(response.Hits) = %d, want %d", got, want)
+		}
+
+		if got, want := response.Meta.Header.Get("Foo"), "Bar"; got != want {
+			t.Errorf(`response.Meta.Header.Get("Foo") = %q, want %q`, got, want)
+		}
+
+		if got, want := response.Meta.StatusCode, http.StatusTeapot; got != want {
+			t.Errorf("response.Meta.StatusCode = %d, want %d", got, want)
+		}
+	})
+
 	t.Run("BodyNotJSON", func(t *testing.T) {
 		resp := &http.Response{
 			Body:       ioutil.NopCloser(strings.NewReader("not-json")),
