@@ -10,6 +10,7 @@ import (
 	"net/http"
 	"net/url"
 	"path"
+	"strings"
 )
 
 var (
@@ -76,6 +77,9 @@ func (c *Client) newSearchRequest(ctx context.Context, query url.Values, options
 	}
 
 	u := c.baseURL.ResolveReference(rel)
+
+	ensureCorrectFieldsParam(&query)
+
 	u.RawQuery = query.Encode()
 
 	req, err := http.NewRequest("GET", u.String(), nil)
@@ -90,6 +94,21 @@ func (c *Client) newSearchRequest(ctx context.Context, query url.Values, options
 	}
 
 	return req, nil
+}
+
+func ensureCorrectFieldsParam(query *url.Values) {
+	if fields := query.Get("fields"); fields != "" {
+		match := false
+		for _, f := range strings.Split(fields, ",") {
+			if f == "type" {
+				match = true
+				break
+			}
+		}
+		if !match {
+			query.Set("fields", fields+",type")
+		}
+	}
 }
 
 // SetRequestID is an option for Search to set the X-Request-Id header on the

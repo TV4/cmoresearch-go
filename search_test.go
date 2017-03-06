@@ -14,6 +14,7 @@ type mockTransport func(*http.Request) (*http.Response, error)
 func (mt mockTransport) RoundTrip(r *http.Request) (*http.Response, error) {
 	return mt(r)
 }
+
 func TestSearch(t *testing.T) {
 	t.Run("NonAPIErrors", func(t *testing.T) {
 		for n, tt := range []struct {
@@ -175,6 +176,34 @@ func TestNewSearchRequest(t *testing.T) {
 
 		if got, want := req.URL.Query().Encode(), "bar%26=234+567&baz=345&foo=123"; got != want {
 			t.Errorf("queryString = %q, want %q", got, want)
+		}
+	})
+
+	t.Run("FieldsQueryParam", func(t *testing.T) {
+		for n, tc := range []struct {
+			inputQuery      url.Values
+			wantQueryString string
+		}{
+			{url.Values{}, ""},                                                               // no change
+			{url.Values{"fields": {"foo"}}, "fields=foo%2Ctype"},                             // type added
+			{url.Values{"fields": {"foo,qux"}}, "fields=foo%2Cqux%2Ctype"},                   // type added
+			{url.Values{"fields": {"foo"}, "gurka": {"bar"}}, "fields=foo%2Ctype&gurka=bar"}, // type added
+			{url.Values{"fields": {"foo,footype"}}, "fields=foo%2Cfootype%2Ctype"},           // type added
+			{url.Values{"fields": {"foo,bar,type"}}, "fields=foo%2Cbar%2Ctype"},              // no change
+			{url.Values{"fields": {"foo,type,bar"}}, "fields=foo%2Ctype%2Cbar"},              // no change
+			{url.Values{"fields": {"type,foo,bar"}}, "fields=type%2Cfoo%2Cbar"},              // no change
+			{url.Values{"fields": {"type"}}, "fields=type"},                                  // no change
+		} {
+			c, _ := NewClient()
+
+			request, err := c.newSearchRequest(context.Background(), tc.inputQuery)
+			if err != nil {
+				t.Fatalf("unexpected error: %v", err)
+			}
+
+			if got, want := request.URL.Query().Encode(), tc.wantQueryString; got != want {
+				t.Errorf("[%d] got %q, want %q", n, got, want)
+			}
 		}
 	})
 }
