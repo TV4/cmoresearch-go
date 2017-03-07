@@ -7,6 +7,13 @@ import (
 	"net/url"
 )
 
+var (
+	defaultBaseURL = &url.URL{
+		Scheme: "https",
+		Host:   "search.b17g.services",
+	}
+)
+
 // Client is a client for the search service.
 type Client struct {
 	baseURL    *url.URL
@@ -16,12 +23,7 @@ type Client struct {
 
 // NewClient returns a new search client.
 func NewClient(options ...func(*Client) error) (*Client, error) {
-	bu, err := url.Parse("https://search.b17g.services/")
-	if err != nil {
-		return nil, err
-	}
-
-	c := &Client{baseURL: bu}
+	c := &Client{baseURL: defaultBaseURL}
 
 	for _, o := range options {
 		if err := o(c); err != nil {

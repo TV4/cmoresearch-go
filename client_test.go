@@ -15,7 +15,7 @@ func TestNewClient(t *testing.T) {
 			t.Fatalf("unexpected error: %v", err)
 		}
 
-		if got, want := c.baseURL.String(), "https://search.b17g.services/"; got != want {
+		if got, want := c.baseURL.String(), "https://search.b17g.services"; got != want {
 			t.Errorf("s.baseURL.String() = %q, want %q", got, want)
 		}
 	})
