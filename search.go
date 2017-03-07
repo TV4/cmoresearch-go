@@ -33,8 +33,6 @@ func (c *Client) Search(ctx context.Context, query url.Values, options ...func(r
 		return Response{}, err
 	}
 
-	c.logf("GET %s", req.URL)
-
 	resp, err := c.httpClient.Do(req)
 
 	if err != nil {

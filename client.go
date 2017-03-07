@@ -18,7 +18,6 @@ var (
 type Client struct {
 	baseURL    *url.URL
 	httpClient *http.Client
-	logf       func(string, ...interface{})
 }
 
 // NewClient returns a new search client.
@@ -32,10 +31,6 @@ func NewClient(options ...func(*Client)) *Client {
 	if c.httpClient == nil {
 		dup := *http.DefaultClient
 		c.httpClient = &dup
-	}
-
-	if c.logf == nil {
-		c.logf = func(string, ...interface{}) {}
 	}
 
 	return c
@@ -58,14 +53,6 @@ func SetBaseURL(rawurl string) func(*Client) {
 func SetHTTPClient(hc *http.Client) func(*Client) {
 	return func(c *Client) {
 		c.httpClient = hc
-	}
-}
-
-// SetLogf is an option to configure a logf (Printf function for logging) when
-// creating a new Search instance.
-func SetLogf(logf func(string, ...interface{})) func(*Client) {
-	return func(c *Client) {
-		c.logf = logf
 	}
 }
 

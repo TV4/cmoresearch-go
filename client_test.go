@@ -1,8 +1,6 @@
 package search
 
 import (
-	"bytes"
-	"fmt"
 	"net/http"
 	"testing"
 )
@@ -32,20 +30,6 @@ func TestNewClient(t *testing.T) {
 				t.Error("s.baseURL is not nil")
 			}
 		})
-	})
-
-	t.Run("SetLogf", func(t *testing.T) {
-		var buf bytes.Buffer
-		logf := func(format string, v ...interface{}) {
-			fmt.Fprintf(&buf, format, v...)
-		}
-		c := NewClient(SetBaseURL("/"), SetLogf(logf))
-
-		c.logf("foo %s", "bar")
-
-		if got, want := buf.String(), "foo bar"; got != want {
-			t.Errorf("got %q, want %q", got, want)
-		}
 	})
 
 	t.Run("SetHTTPClient", func(t *testing.T) {
