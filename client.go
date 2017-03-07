@@ -1,4 +1,3 @@
-// Package search implements a client for Bonnier Broadcasting's search service.
 package search
 
 import (
