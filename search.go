@@ -19,6 +19,9 @@ var (
 
 	// ErrContentTypeNotJSON is returned if a response does not have Content-Type application/json
 	ErrContentTypeNotJSON = errors.New("Content-Type not JSON")
+
+	// ErrInvalidBaseURL is returned if the client has been configured with an invalid base URL
+	ErrInvalidBaseURL = errors.New("invalid base URL")
 )
 
 // Search performs a search and returns the response. An error is returned if
@@ -71,6 +74,10 @@ func (c *Client) Search(ctx context.Context, query url.Values, options ...func(r
 }
 
 func (c *Client) newSearchRequest(ctx context.Context, query url.Values, options ...func(r *http.Request)) (*http.Request, error) {
+	if c.baseURL == nil {
+		return nil, ErrInvalidBaseURL
+	}
+
 	rel, err := url.Parse(path.Join(c.baseURL.Path, "/search"))
 	if err != nil {
 		return nil, err

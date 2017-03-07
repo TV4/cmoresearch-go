@@ -2,7 +2,6 @@ package search
 
 import (
 	"bytes"
-	"errors"
 	"fmt"
 	"net/http"
 	"testing"
@@ -10,38 +9,29 @@ import (
 
 func TestNewClient(t *testing.T) {
 	t.Run("DefaultConfig", func(t *testing.T) {
-		c, err := NewClient()
-		if err != nil {
-			t.Fatalf("unexpected error: %v", err)
-		}
+		c := NewClient()
 
 		if got, want := c.baseURL.String(), "https://search.b17g.services"; got != want {
 			t.Errorf("s.baseURL.String() = %q, want %q", got, want)
 		}
 	})
 
-	t.Run("OptionReturningError", func(t *testing.T) {
-		optionError := errors.New("option error")
-		option := func(*Client) error {
-			return optionError
-		}
-
-		_, err := NewClient(SetBaseURL("/"), option)
-
-		if got, want := err, optionError; got != want {
-			t.Errorf("got err = %v, %v", got, want)
-		}
-	})
-
 	t.Run("SetBaseURL", func(t *testing.T) {
-		c, err := NewClient(SetBaseURL("http://example.com/"))
-		if err != nil {
-			t.Fatalf("unexpected error: %v", err)
-		}
+		t.Run("Success", func(t *testing.T) {
+			c := NewClient(SetBaseURL("http://example.com/"))
 
-		if got, want := c.baseURL.String(), "http://example.com/"; got != want {
-			t.Errorf("s.baseURL.String() = %q, want %q", got, want)
-		}
+			if got, want := c.baseURL.String(), "http://example.com/"; got != want {
+				t.Errorf("s.baseURL.String() = %q, want %q", got, want)
+			}
+		})
+
+		t.Run("Fail", func(t *testing.T) {
+			c := NewClient(SetBaseURL(": not an URL"))
+
+			if c.baseURL != nil {
+				t.Error("s.baseURL is not nil")
+			}
+		})
 	})
 
 	t.Run("SetLogf", func(t *testing.T) {
@@ -49,10 +39,7 @@ func TestNewClient(t *testing.T) {
 		logf := func(format string, v ...interface{}) {
 			fmt.Fprintf(&buf, format, v...)
 		}
-		c, err := NewClient(SetBaseURL("/"), SetLogf(logf))
-		if err != nil {
-			t.Fatalf("unexpected error: %v", err)
-		}
+		c := NewClient(SetBaseURL("/"), SetLogf(logf))
 
 		c.logf("foo %s", "bar")
 
@@ -64,10 +51,7 @@ func TestNewClient(t *testing.T) {
 	t.Run("SetHTTPClient", func(t *testing.T) {
 		hc := &http.Client{}
 
-		c, err := NewClient(SetBaseURL("/"), SetHTTPClient(hc))
-		if err != nil {
-			t.Fatalf("unexpected error: %v", err)
-		}
+		c := NewClient(SetBaseURL("/"), SetHTTPClient(hc))
 
 		if got, want := c.httpClient, hc; got != want {
 			t.Errorf("s.httpClient = %p, want %p", got, want)

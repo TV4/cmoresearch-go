@@ -38,12 +38,9 @@ func TestSearch(t *testing.T) {
 
 			hc := &http.Client{Transport: mockT}
 
-			c, err := NewClient(SetBaseURL("/"), SetHTTPClient(hc))
-			if err != nil {
-				t.Fatalf("[%d] NewClient: unexpected error: %v", n, err)
-			}
+			c := NewClient(SetBaseURL("/"), SetHTTPClient(hc))
 
-			_, err = c.Search(context.Background(), nil)
+			_, err := c.Search(context.Background(), nil)
 
 			if err == nil {
 				t.Fatalf("[%d], Search: got nil, want err", n)
@@ -68,12 +65,9 @@ func TestSearch(t *testing.T) {
 
 		hc := &http.Client{Transport: mockT}
 
-		c, err := NewClient(SetBaseURL("/"), SetHTTPClient(hc))
-		if err != nil {
-			t.Fatalf("NewClient: unexpected error: %v", err)
-		}
+		c := NewClient(SetBaseURL("/"), SetHTTPClient(hc))
 
-		_, err = c.Search(context.Background(), nil)
+		_, err := c.Search(context.Background(), nil)
 
 		if err == nil {
 			t.Fatal("Search: got nil, want err")
@@ -105,10 +99,7 @@ func TestSearch(t *testing.T) {
 
 		hc := &http.Client{Transport: mockT}
 
-		c, err := NewClient(SetBaseURL("/"), SetHTTPClient(hc))
-		if err != nil {
-			t.Fatalf("NewClient: unexpected error: %v", err)
-		}
+		c := NewClient(SetBaseURL("/"), SetHTTPClient(hc))
 
 		res, err := c.Search(context.Background(), nil)
 
@@ -132,7 +123,7 @@ func TestSearch(t *testing.T) {
 
 func TestNewSearchRequest(t *testing.T) {
 	t.Run("ArbitraryOption", func(t *testing.T) {
-		c, _ := NewClient()
+		c := NewClient()
 
 		option := func(req *http.Request) {
 			req.Header.Set("Foo", "foo-header")
@@ -149,7 +140,7 @@ func TestNewSearchRequest(t *testing.T) {
 	})
 
 	t.Run("SetRequestIDOption", func(t *testing.T) {
-		c, _ := NewClient()
+		c := NewClient()
 
 		req, err := c.newSearchRequest(context.Background(), nil, SetRequestID("request-id"))
 		if err != nil {
@@ -162,7 +153,7 @@ func TestNewSearchRequest(t *testing.T) {
 	})
 
 	t.Run("QueryString", func(t *testing.T) {
-		c, _ := NewClient()
+		c := NewClient()
 
 		query := url.Values{}
 		query.Add("foo", "123")
@@ -194,7 +185,7 @@ func TestNewSearchRequest(t *testing.T) {
 			{url.Values{"fields": {"type,foo,bar"}}, "fields=type%2Cfoo%2Cbar"},              // no change
 			{url.Values{"fields": {"type"}}, "fields=type"},                                  // no change
 		} {
-			c, _ := NewClient()
+			c := NewClient()
 
 			request, err := c.newSearchRequest(context.Background(), tc.inputQuery)
 			if err != nil {

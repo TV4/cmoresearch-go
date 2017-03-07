@@ -22,13 +22,11 @@ type Client struct {
 }
 
 // NewClient returns a new search client.
-func NewClient(options ...func(*Client) error) (*Client, error) {
+func NewClient(options ...func(*Client)) *Client {
 	c := &Client{baseURL: defaultBaseURL}
 
 	for _, o := range options {
-		if err := o(c); err != nil {
-			return nil, err
-		}
+		o(c)
 	}
 
 	if c.httpClient == nil {
@@ -40,37 +38,34 @@ func NewClient(options ...func(*Client) error) (*Client, error) {
 		c.logf = func(string, ...interface{}) {}
 	}
 
-	return c, nil
+	return c
 }
 
 // SetBaseURL is an option to set a custom URL to the search service when
 // creating a new Search instance.
-func SetBaseURL(rawurl string) func(*Client) error {
-	return func(c *Client) error {
-		bu, err := url.Parse(rawurl)
-		if err != nil {
-			return err
+func SetBaseURL(rawurl string) func(*Client) {
+	return func(c *Client) {
+		if bu, err := url.Parse(rawurl); err == nil {
+			c.baseURL = bu
+			return
 		}
-		c.baseURL = bu
-		return nil
+		c.baseURL = nil
 	}
 }
 
 // SetHTTPClient is an option to set a custom HTTP client when creating a new
 // Search instance.
-func SetHTTPClient(hc *http.Client) func(*Client) error {
-	return func(c *Client) error {
+func SetHTTPClient(hc *http.Client) func(*Client) {
+	return func(c *Client) {
 		c.httpClient = hc
-		return nil
 	}
 }
 
 // SetLogf is an option to configure a logf (Printf function for logging) when
 // creating a new Search instance.
-func SetLogf(logf func(string, ...interface{})) func(*Client) error {
-	return func(c *Client) error {
+func SetLogf(logf func(string, ...interface{})) func(*Client) {
+	return func(c *Client) {
 		c.logf = logf
-		return nil
 	}
 }
 
