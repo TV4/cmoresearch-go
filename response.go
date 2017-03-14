@@ -2,6 +2,7 @@ package search
 
 import (
 	"net/http"
+	"net/url"
 	"time"
 )
 
@@ -19,6 +20,7 @@ type Hit interface{}
 type Meta struct {
 	StatusCode int
 	Header     http.Header
+	RequestURL *url.URL
 }
 
 // Asset is an asset hit returned by the search service.

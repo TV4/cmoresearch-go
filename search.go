@@ -42,6 +42,7 @@ func (c *Client) Search(ctx context.Context, query url.Values, options ...func(r
 	meta := Meta{
 		StatusCode: resp.StatusCode,
 		Header:     resp.Header,
+		RequestURL: req.URL,
 	}
 
 	defer func() {
@@ -64,10 +65,11 @@ func (c *Client) Search(ctx context.Context, query url.Values, options ...func(r
 		return Response{Meta: meta}, ErrContentTypeNotJSON
 	}
 
-	response, err := makeResponse(resp)
+	response, err := makeResponse(req, resp)
 	if err != nil {
 		return Response{Meta: meta}, err
 	}
+
 	return response, nil
 }
 
@@ -124,10 +126,11 @@ func SetRequestID(requestID string) func(*http.Request) {
 	}
 }
 
-func makeResponse(resp *http.Response) (Response, error) {
+func makeResponse(req *http.Request, resp *http.Response) (Response, error) {
 	meta := Meta{
 		StatusCode: resp.StatusCode,
 		Header:     resp.Header,
+		RequestURL: req.URL,
 	}
 
 	var v struct {

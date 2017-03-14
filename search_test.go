@@ -4,6 +4,7 @@ import (
 	"context"
 	"io/ioutil"
 	"net/http"
+	"net/http/httptest"
 	"net/url"
 	"strings"
 	"testing"
@@ -201,6 +202,10 @@ func TestNewSearchRequest(t *testing.T) {
 
 func TestMakeResponse(t *testing.T) {
 	t.Run("Success", func(t *testing.T) {
+		target := "http://example.com/foo"
+
+		req := httptest.NewRequest(http.MethodGet, target, nil)
+
 		resp := &http.Response{
 			Body: ioutil.NopCloser(strings.NewReader(`
 		{
@@ -216,7 +221,7 @@ func TestMakeResponse(t *testing.T) {
 			StatusCode: http.StatusTeapot,
 		}
 
-		response, err := makeResponse(resp)
+		response, err := makeResponse(req, resp)
 		if err != nil {
 			t.Fatalf("unexpected error: %v", err)
 		}
@@ -239,6 +244,10 @@ func TestMakeResponse(t *testing.T) {
 
 		if _, ok := response.Hits[2].(*Asset); !ok {
 			t.Errorf("response.Hits[2] is a %T, want a %T", response.Hits[2], &Asset{})
+		}
+
+		if got, want := response.Meta.RequestURL.String(), target; got != want {
+			t.Errorf(`response.Meta.RequestURL.String() = %q, want %q`, got, want)
 		}
 
 		if got, want := response.Meta.Header.Get("Foo"), "Bar"; got != want {
@@ -304,13 +313,17 @@ func TestMakeResponse(t *testing.T) {
 			},
 		} {
 			t.Run(tc.description, func(t *testing.T) {
+				target := "http://example.com/" + tc.description
+
+				req := httptest.NewRequest(http.MethodGet, target, nil)
+
 				resp := &http.Response{
 					Body:       ioutil.NopCloser(strings.NewReader(tc.body)),
 					Header:     http.Header{"Foo": {"Bar"}},
 					StatusCode: http.StatusTeapot,
 				}
 
-				response, err := makeResponse(resp)
+				response, err := makeResponse(req, resp)
 				if err == nil {
 					t.Fatal("got nil, want error")
 				}
@@ -321,6 +334,10 @@ func TestMakeResponse(t *testing.T) {
 
 				if got, want := len(response.Hits), 0; got != want {
 					t.Errorf("len(response.Hits) = %d, want %d", got, want)
+				}
+
+				if got, want := response.Meta.RequestURL.String(), target; got != want {
+					t.Errorf(`response.Meta.RequestURL.String() = %q, want %q`, got, want)
 				}
 
 				if got, want := response.Meta.Header.Get("Foo"), "Bar"; got != want {
@@ -335,6 +352,10 @@ func TestMakeResponse(t *testing.T) {
 	})
 
 	t.Run("TypeMissing", func(t *testing.T) {
+		target := "http://example.com/bar"
+
+		req := httptest.NewRequest(http.MethodGet, target, nil)
+
 		resp := &http.Response{
 			Body: ioutil.NopCloser(strings.NewReader(`
 				{
@@ -346,7 +367,7 @@ func TestMakeResponse(t *testing.T) {
 			StatusCode: http.StatusTeapot,
 		}
 
-		response, err := makeResponse(resp)
+		response, err := makeResponse(req, resp)
 		if err == nil {
 			t.Fatal("got nil, want error")
 		}
@@ -359,6 +380,10 @@ func TestMakeResponse(t *testing.T) {
 			t.Errorf("len(response.Hits) = %d, want %d", got, want)
 		}
 
+		if got, want := response.Meta.RequestURL.String(), target; got != want {
+			t.Errorf(`response.Meta.RequestURL.String() = %q, want %q`, got, want)
+		}
+
 		if got, want := response.Meta.Header.Get("Foo"), "Bar"; got != want {
 			t.Errorf(`response.Meta.Header.Get("Foo") = %q, want %q`, got, want)
 		}
@@ -369,15 +394,23 @@ func TestMakeResponse(t *testing.T) {
 	})
 
 	t.Run("BodyNotJSON", func(t *testing.T) {
+		target := "http://example.com/baz"
+
+		req := httptest.NewRequest(http.MethodGet, target, nil)
+
 		resp := &http.Response{
 			Body:       ioutil.NopCloser(strings.NewReader("not-json")),
 			Header:     http.Header{"Foo": {"Bar"}},
 			StatusCode: http.StatusTeapot,
 		}
 
-		response, err := makeResponse(resp)
+		response, err := makeResponse(req, resp)
 		if err == nil {
 			t.Fatal("got nil, want error")
+		}
+
+		if got, want := response.Meta.RequestURL.String(), target; got != want {
+			t.Errorf(`response.Meta.RequestURL.String() = %q, want %q`, got, want)
 		}
 
 		if got, want := response.Meta.Header.Get("Foo"), "Bar"; got != want {
