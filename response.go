@@ -57,6 +57,10 @@ type Asset struct {
 	EpisodeNumber         int                 `json:"episode_number"`
 	Events                []Event             `json:"events"`
 	ExternalReferences    []ExternalReference `json:"external_references"`
+	GenreDescriptionDa    string              `json:"genre_description_da"`
+	GenreDescriptionFi    string              `json:"genre_description_fi"`
+	GenreDescriptionNb    string              `json:"genre_description_nb"`
+	GenreDescriptionSv    string              `json:"genre_description_sv"`
 	Genres                []Genre             `json:"genres"`
 	HomeTeam              Team                `json:"hometeam"`
 	ItemsPublished        bool                `json:"items_published"`
@@ -123,6 +127,10 @@ type Series struct {
 	DescriptionTinySv     string              `json:"description_tiny_sv"`
 	Events                []Event             `json:"events"`
 	ExternalReferences    []ExternalReference `json:"external_references"`
+	GenreDescriptionDa    string              `json:"genre_description_da"`
+	GenreDescriptionFi    string              `json:"genre_description_fi"`
+	GenreDescriptionNb    string              `json:"genre_description_nb"`
+	GenreDescriptionSv    string              `json:"genre_description_sv"`
 	Genres                []Genre             `json:"genres"`
 	ID                    string              `json:"id"`
 	KeywordsDa            []Keyword           `json:"keywords_da"`
