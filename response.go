@@ -14,7 +14,60 @@ type Response struct {
 }
 
 // Hit is a search hit. It holds e.g. Asset or Series.
-type Hit interface{}
+type Hit interface {
+	Subset() HitSubset
+}
+
+// HitSubset contains the subset of fields in common between different hit types (*Series and *Asset for now)
+type HitSubset struct {
+	ID                    string              `json:"id"`
+	Type                  string              `json:"type"`
+	Cinemascope           Image               `json:"cinemascope"`
+	ContentSource         string              `json:"content_source"`
+	Country               []string            `json:"country"`
+	Credits               []Credit            `json:"credits"`
+	DescriptionExtendedDa string              `json:"description_extended_da"`
+	DescriptionExtendedFi string              `json:"description_extended_fi"`
+	DescriptionExtendedNb string              `json:"description_extended_nb"`
+	DescriptionExtendedSv string              `json:"description_extended_sv"`
+	DescriptionLongDa     string              `json:"description_long_da"`
+	DescriptionLongFi     string              `json:"description_long_fi"`
+	DescriptionLongNb     string              `json:"description_long_nb"`
+	DescriptionLongSv     string              `json:"description_long_sv"`
+	DescriptionMediumDa   string              `json:"description_medium_da"`
+	DescriptionMediumFi   string              `json:"description_medium_fi"`
+	DescriptionMediumNb   string              `json:"description_medium_nb"`
+	DescriptionMediumSv   string              `json:"description_medium_sv"`
+	DescriptionShortDa    string              `json:"description_short_da"`
+	DescriptionShortFi    string              `json:"description_short_fi"`
+	DescriptionShortNb    string              `json:"description_short_nb"`
+	DescriptionShortSv    string              `json:"description_short_sv"`
+	DescriptionTinyDa     string              `json:"description_tiny_da"`
+	DescriptionTinyFi     string              `json:"description_tiny_fi"`
+	DescriptionTinyNb     string              `json:"description_tiny_nb"`
+	DescriptionTinySv     string              `json:"description_tiny_sv"`
+	Events                []Event             `json:"events"`
+	ExternalReferences    []ExternalReference `json:"external_references"`
+	GenreDescriptionDa    string              `json:"genre_description_da"`
+	GenreDescriptionFi    string              `json:"genre_description_fi"`
+	GenreDescriptionNb    string              `json:"genre_description_nb"`
+	GenreDescriptionSv    string              `json:"genre_description_sv"`
+	Genres                []Genre             `json:"genres"`
+	KeywordsDa            []Keyword           `json:"keywords_da"`
+	KeywordsFi            []Keyword           `json:"keywords_fi"`
+	KeywordsNb            []Keyword           `json:"keywords_nb"`
+	KeywordsSv            []Keyword           `json:"keywords_sv"`
+	Landscape             Image               `json:"landscape"`
+	Poster                Image               `json:"poster"`
+	SpokenLanguages       []string            `json:"spoken_languages"`
+	Studio                string              `json:"studio"`
+	Tags                  Tags                `json:"tags"`
+	Timestamp             string              `json:"timestamp"`
+	TitleDa               string              `json:"title_da"`
+	TitleFi               string              `json:"title_fi"`
+	TitleNb               string              `json:"title_nb"`
+	TitleSv               string              `json:"title_sv"`
+}
 
 // Meta contains request/response meta information
 type Meta struct {
@@ -98,6 +151,59 @@ type Asset struct {
 	VideoID               string              `json:"video_id"`
 }
 
+// Subset returns the HitSubset for an *Asset
+func (a *Asset) Subset() HitSubset {
+	return HitSubset{
+		ID:                    a.VideoID,
+		Type:                  a.Type,
+		Cinemascope:           a.Cinemascope,
+		ContentSource:         a.ContentSource,
+		Country:               a.Country,
+		Credits:               a.Credits,
+		DescriptionExtendedDa: a.DescriptionExtendedDa,
+		DescriptionExtendedFi: a.DescriptionExtendedFi,
+		DescriptionExtendedNb: a.DescriptionExtendedNb,
+		DescriptionExtendedSv: a.DescriptionExtendedSv,
+		DescriptionLongDa:     a.DescriptionLongDa,
+		DescriptionLongFi:     a.DescriptionLongFi,
+		DescriptionLongNb:     a.DescriptionLongNb,
+		DescriptionLongSv:     a.DescriptionLongSv,
+		DescriptionMediumDa:   a.DescriptionMediumDa,
+		DescriptionMediumFi:   a.DescriptionMediumFi,
+		DescriptionMediumNb:   a.DescriptionMediumNb,
+		DescriptionMediumSv:   a.DescriptionMediumSv,
+		DescriptionShortDa:    a.DescriptionShortDa,
+		DescriptionShortFi:    a.DescriptionShortFi,
+		DescriptionShortNb:    a.DescriptionShortNb,
+		DescriptionShortSv:    a.DescriptionShortSv,
+		DescriptionTinyDa:     a.DescriptionTinyDa,
+		DescriptionTinyFi:     a.DescriptionTinyFi,
+		DescriptionTinyNb:     a.DescriptionTinyNb,
+		DescriptionTinySv:     a.DescriptionTinySv,
+		Events:                a.Events,
+		ExternalReferences:    a.ExternalReferences,
+		GenreDescriptionDa:    a.GenreDescriptionDa,
+		GenreDescriptionFi:    a.GenreDescriptionFi,
+		GenreDescriptionNb:    a.GenreDescriptionNb,
+		GenreDescriptionSv:    a.GenreDescriptionSv,
+		Genres:                a.Genres,
+		KeywordsDa:            a.KeywordsDa,
+		KeywordsFi:            a.KeywordsFi,
+		KeywordsNb:            a.KeywordsNb,
+		KeywordsSv:            a.KeywordsSv,
+		Landscape:             a.Landscape,
+		Poster:                a.Poster,
+		SpokenLanguages:       a.SpokenLanguages,
+		Studio:                a.Studio,
+		Tags:                  a.Tags,
+		Timestamp:             a.Timestamp,
+		TitleDa:               a.TitleDa,
+		TitleFi:               a.TitleFi,
+		TitleNb:               a.TitleNb,
+		TitleSv:               a.TitleSv,
+	}
+}
+
 // Series is an series hit returned by the search service.
 type Series struct {
 	BrandID               string              `json:"brand_id"`
@@ -149,6 +255,59 @@ type Series struct {
 	TitleNb               string              `json:"title_nb"`
 	TitleSv               string              `json:"title_sv"`
 	Type                  string              `json:"type"`
+}
+
+// Subset returns the HitSubset for a *Series
+func (s *Series) Subset() HitSubset {
+	return HitSubset{
+		ID:                    s.BrandID,
+		Type:                  s.Type,
+		Cinemascope:           s.Cinemascope,
+		ContentSource:         s.ContentSource,
+		Country:               s.Country,
+		Credits:               s.Credits,
+		DescriptionExtendedDa: s.DescriptionExtendedDa,
+		DescriptionExtendedFi: s.DescriptionExtendedFi,
+		DescriptionExtendedNb: s.DescriptionExtendedNb,
+		DescriptionExtendedSv: s.DescriptionExtendedSv,
+		DescriptionLongDa:     s.DescriptionLongDa,
+		DescriptionLongFi:     s.DescriptionLongFi,
+		DescriptionLongNb:     s.DescriptionLongNb,
+		DescriptionLongSv:     s.DescriptionLongSv,
+		DescriptionMediumDa:   s.DescriptionMediumDa,
+		DescriptionMediumFi:   s.DescriptionMediumFi,
+		DescriptionMediumNb:   s.DescriptionMediumNb,
+		DescriptionMediumSv:   s.DescriptionMediumSv,
+		DescriptionShortDa:    s.DescriptionShortDa,
+		DescriptionShortFi:    s.DescriptionShortFi,
+		DescriptionShortNb:    s.DescriptionShortNb,
+		DescriptionShortSv:    s.DescriptionShortSv,
+		DescriptionTinyDa:     s.DescriptionTinyDa,
+		DescriptionTinyFi:     s.DescriptionTinyFi,
+		DescriptionTinyNb:     s.DescriptionTinyNb,
+		DescriptionTinySv:     s.DescriptionTinySv,
+		Events:                s.Events,
+		ExternalReferences:    s.ExternalReferences,
+		GenreDescriptionDa:    s.GenreDescriptionDa,
+		GenreDescriptionFi:    s.GenreDescriptionFi,
+		GenreDescriptionNb:    s.GenreDescriptionNb,
+		GenreDescriptionSv:    s.GenreDescriptionSv,
+		Genres:                s.Genres,
+		KeywordsDa:            s.KeywordsDa,
+		KeywordsFi:            s.KeywordsFi,
+		KeywordsNb:            s.KeywordsNb,
+		KeywordsSv:            s.KeywordsSv,
+		Landscape:             s.Landscape,
+		Poster:                s.Poster,
+		SpokenLanguages:       s.SpokenLanguages,
+		Studio:                s.Studio,
+		Tags:                  s.Tags,
+		Timestamp:             s.Timestamp,
+		TitleDa:               s.TitleDa,
+		TitleFi:               s.TitleFi,
+		TitleNb:               s.TitleNb,
+		TitleSv:               s.TitleSv,
+	}
 }
 
 // Brand is the brand of an asset, e.g. Idol or Harry Potter.
