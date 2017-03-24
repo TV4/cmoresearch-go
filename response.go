@@ -15,7 +15,7 @@ type Response struct {
 
 // Hit is a search hit. It holds e.g. Asset or Series.
 type Hit interface {
-	Subset() HitSubset
+	Subset() *HitSubset
 }
 
 // HitSubset contains the subset of fields in common between different hit types (*Series and *Asset for now)
@@ -78,6 +78,8 @@ type Meta struct {
 
 // Asset is an asset hit returned by the search service.
 type Asset struct {
+	hitSubset *HitSubset
+
 	Arena                 string              `json:"arena"`
 	AwayTeam              Team                `json:"awayteam"`
 	Brand                 Brand               `json:"brand"`
@@ -152,8 +154,11 @@ type Asset struct {
 }
 
 // Subset returns the HitSubset for an *Asset
-func (a *Asset) Subset() HitSubset {
-	return HitSubset{
+func (a *Asset) Subset() *HitSubset {
+	if a.hitSubset != nil {
+		return a.hitSubset
+	}
+	a.hitSubset = &HitSubset{
 		ID:                    a.VideoID,
 		Type:                  a.Type,
 		Cinemascope:           a.Cinemascope,
@@ -202,10 +207,13 @@ func (a *Asset) Subset() HitSubset {
 		TitleNb:               a.TitleNb,
 		TitleSv:               a.TitleSv,
 	}
+	return a.hitSubset
 }
 
 // Series is an series hit returned by the search service.
 type Series struct {
+	hitSubset *HitSubset
+
 	BrandID               string              `json:"brand_id"`
 	Cinemascope           Image               `json:"cinemascope"`
 	ContentSource         string              `json:"content_source"`
@@ -258,8 +266,11 @@ type Series struct {
 }
 
 // Subset returns the HitSubset for a *Series
-func (s *Series) Subset() HitSubset {
-	return HitSubset{
+func (s *Series) Subset() *HitSubset {
+	if s.hitSubset != nil {
+		return s.hitSubset
+	}
+	s.hitSubset = &HitSubset{
 		ID:                    s.BrandID,
 		Type:                  s.Type,
 		Cinemascope:           s.Cinemascope,
@@ -308,6 +319,7 @@ func (s *Series) Subset() HitSubset {
 		TitleNb:               s.TitleNb,
 		TitleSv:               s.TitleSv,
 	}
+	return s.hitSubset
 }
 
 // Brand is the brand of an asset, e.g. Idol or Harry Potter.
