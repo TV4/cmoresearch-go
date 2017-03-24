@@ -2,6 +2,12 @@ package search
 
 import "testing"
 
+// Ensure *Asset and *Series implement Hit
+var (
+	_ Hit = &Asset{}
+	_ Hit = &Series{}
+)
+
 func TestAsset_Subset(t *testing.T) {
 	t.Run("Fields", func(t *testing.T) {
 		a := &Asset{
@@ -9,7 +15,7 @@ func TestAsset_Subset(t *testing.T) {
 			Type:    "movie",
 		}
 
-		sub := Hit(a).Subset()
+		sub := a.Subset()
 
 		if got, want := sub.ID, a.VideoID; got != want {
 			t.Fatalf("sub.ID = %q, want %q", got, want)
@@ -42,7 +48,7 @@ func TestSeries_Subset(t *testing.T) {
 			Type:    "series",
 		}
 
-		sub := Hit(s).Subset()
+		sub := s.Subset()
 
 		if got, want := sub.ID, s.BrandID; got != want {
 			t.Fatalf("sub.ID = %q, want %q", got, want)
