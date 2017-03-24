@@ -3,19 +3,12 @@ package search
 import "testing"
 
 func TestSubset(t *testing.T) {
-	var (
-		a = &Asset{
+	t.Run("Asset", func(t *testing.T) {
+		a := &Asset{
 			VideoID: "video-id-123",
 			Type:    "movie",
 		}
 
-		s = &Series{
-			BrandID: "brand-id-345",
-			Type:    "series",
-		}
-	)
-
-	t.Run("Asset", func(t *testing.T) {
 		sub := Hit(a).Subset()
 
 		if got, want := sub.ID, a.VideoID; got != want {
@@ -28,6 +21,11 @@ func TestSubset(t *testing.T) {
 	})
 
 	t.Run("Series", func(t *testing.T) {
+		s := &Series{
+			BrandID: "brand-id-345",
+			Type:    "series",
+		}
+
 		sub := Hit(s).Subset()
 
 		if got, want := sub.ID, s.BrandID; got != want {
