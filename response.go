@@ -48,10 +48,6 @@ type HitSubset struct {
 	DescriptionTinySv     string              `json:"description_tiny_sv"`
 	Events                []Event             `json:"events"`
 	ExternalReferences    []ExternalReference `json:"external_references"`
-	GenreDescriptionDa    string              `json:"genre_description_da"`
-	GenreDescriptionFi    string              `json:"genre_description_fi"`
-	GenreDescriptionNb    string              `json:"genre_description_nb"`
-	GenreDescriptionSv    string              `json:"genre_description_sv"`
 	Genres                []Genre             `json:"genres"`
 	KeywordsDa            []Keyword           `json:"keywords_da"`
 	KeywordsFi            []Keyword           `json:"keywords_fi"`
@@ -112,10 +108,6 @@ type Asset struct {
 	EpisodeNumber         int                 `json:"episode_number"`
 	Events                []Event             `json:"events"`
 	ExternalReferences    []ExternalReference `json:"external_references"`
-	GenreDescriptionDa    string              `json:"genre_description_da"`
-	GenreDescriptionFi    string              `json:"genre_description_fi"`
-	GenreDescriptionNb    string              `json:"genre_description_nb"`
-	GenreDescriptionSv    string              `json:"genre_description_sv"`
 	Genres                []Genre             `json:"genres"`
 	HomeTeam              Team                `json:"hometeam"`
 	ItemsPublished        bool                `json:"items_published"`
@@ -187,10 +179,6 @@ func (a *Asset) Subset() *HitSubset {
 		DescriptionTinySv:     a.DescriptionTinySv,
 		Events:                a.Events,
 		ExternalReferences:    a.ExternalReferences,
-		GenreDescriptionDa:    a.GenreDescriptionDa,
-		GenreDescriptionFi:    a.GenreDescriptionFi,
-		GenreDescriptionNb:    a.GenreDescriptionNb,
-		GenreDescriptionSv:    a.GenreDescriptionSv,
 		Genres:                a.Genres,
 		KeywordsDa:            a.KeywordsDa,
 		KeywordsFi:            a.KeywordsFi,
@@ -299,10 +287,6 @@ func (s *Series) Subset() *HitSubset {
 		DescriptionTinySv:     s.DescriptionTinySv,
 		Events:                s.Events,
 		ExternalReferences:    s.ExternalReferences,
-		GenreDescriptionDa:    s.GenreDescriptionDa,
-		GenreDescriptionFi:    s.GenreDescriptionFi,
-		GenreDescriptionNb:    s.GenreDescriptionNb,
-		GenreDescriptionSv:    s.GenreDescriptionSv,
 		Genres:                s.Genres,
 		KeywordsDa:            s.KeywordsDa,
 		KeywordsFi:            s.KeywordsFi,
@@ -347,6 +331,10 @@ type Brand struct {
 	DescriptionTinyNb     string              `json:"description_tiny_nb"`
 	DescriptionTinySv     string              `json:"description_tiny_sv"`
 	ExternalReferences    []ExternalReference `json:"external_references"`
+	GenreDescriptionDa    string              `json:"genre_description_da"`
+	GenreDescriptionFi    string              `json:"genre_description_fi"`
+	GenreDescriptionNb    string              `json:"genre_description_nb"`
+	GenreDescriptionSv    string              `json:"genre_description_sv"`
 	Genres                []Genre             `json:"genres"`
 	ID                    string              `json:"id"`
 	Landscape             Image               `json:"landscape"`
@@ -469,6 +457,10 @@ type Season struct {
 	DescriptionTinyNb     string              `json:"description_tiny_nb"`
 	DescriptionTinySv     string              `json:"description_tiny_sv"`
 	ExternalReferences    []ExternalReference `json:"external_references"`
+	GenreDescriptionDa    string              `json:"genre_description_da"`
+	GenreDescriptionFi    string              `json:"genre_description_fi"`
+	GenreDescriptionNb    string              `json:"genre_description_nb"`
+	GenreDescriptionSv    string              `json:"genre_description_sv"`
 	Genres                []Genre             `json:"genres"`
 	ID                    string              `json:"id"`
 	Landscape             Image               `json:"landscape"`
