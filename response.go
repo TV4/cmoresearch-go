@@ -60,6 +60,7 @@ type HitSubset struct {
 	Landscape             Image               `json:"landscape"`
 	Poster                Image               `json:"poster"`
 	FourByThree           Image               `json:"four_by_three"`
+	FifteenBySeven        Image               `json:"fifteen_by_seven"`
 	SpokenLanguages       []string            `json:"spoken_languages"`
 	Studio                string              `json:"studio"`
 	Tags                  Tags                `json:"tags"`
@@ -139,6 +140,7 @@ type Asset struct {
 	ParentalRatings       []ParentalRating    `json:"parental_ratings"`
 	Poster                Image               `json:"poster"`
 	FourByThree           Image               `json:"four_by_three"`
+	FifteenBySeven        Image               `json:"fifteen_by_seven"`
 	ProductionYear        string              `json:"production_year"`
 	PublicationRights     PublicationRights   `json:"publication_rights"`
 	Season                Season              `json:"season"`
@@ -201,6 +203,7 @@ func (a *Asset) Subset() *HitSubset {
 		Landscape:             a.Landscape,
 		Poster:                a.Poster,
 		FourByThree:           a.FourByThree,
+		FifteenBySeven:        a.FifteenBySeven,
 		SpokenLanguages:       a.SpokenLanguages,
 		Studio:                a.Studio,
 		Tags:                  a.Tags,
@@ -257,6 +260,7 @@ type Series struct {
 	Landscape             Image               `json:"landscape"`
 	Poster                Image               `json:"poster"`
 	FourByThree           Image               `json:"four_by_three"`
+	FifteenBySeven        Image               `json:"fifteen_by_seven"`
 	Seasons               []int               `json:"seasons"`
 	SpokenLanguages       []string            `json:"spoken_languages"`
 	Studio                string              `json:"studio"`
