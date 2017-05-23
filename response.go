@@ -48,6 +48,8 @@ type HitSubset struct {
 	DescriptionTinySv     string              `json:"description_tiny_sv"`
 	Events                []Event             `json:"events"`
 	ExternalReferences    []ExternalReference `json:"external_references"`
+	FifteenBySeven        Image               `json:"fifteen_by_seven"`
+	FourByThree           Image               `json:"four_by_three"`
 	GenreDescriptionDa    string              `json:"genre_description_da"`
 	GenreDescriptionFi    string              `json:"genre_description_fi"`
 	GenreDescriptionNb    string              `json:"genre_description_nb"`
@@ -59,8 +61,6 @@ type HitSubset struct {
 	KeywordsSv            []Keyword           `json:"keywords_sv"`
 	Landscape             Image               `json:"landscape"`
 	Poster                Image               `json:"poster"`
-	FourByThree           Image               `json:"four_by_three"`
-	FifteenBySeven        Image               `json:"fifteen_by_seven"`
 	SpokenLanguages       []string            `json:"spoken_languages"`
 	Studio                string              `json:"studio"`
 	Tags                  Tags                `json:"tags"`
@@ -114,6 +114,8 @@ type Asset struct {
 	EpisodeNumber         int                 `json:"episode_number"`
 	Events                []Event             `json:"events"`
 	ExternalReferences    []ExternalReference `json:"external_references"`
+	FifteenBySeven        Image               `json:"fifteen_by_seven"`
+	FourByThree           Image               `json:"four_by_three"`
 	GenreDescriptionDa    string              `json:"genre_description_da"`
 	GenreDescriptionFi    string              `json:"genre_description_fi"`
 	GenreDescriptionNb    string              `json:"genre_description_nb"`
@@ -139,8 +141,6 @@ type Asset struct {
 	OriginalTitle         OriginalTitle       `json:"original_title"`
 	ParentalRatings       []ParentalRating    `json:"parental_ratings"`
 	Poster                Image               `json:"poster"`
-	FourByThree           Image               `json:"four_by_three"`
-	FifteenBySeven        Image               `json:"fifteen_by_seven"`
 	ProductionYear        string              `json:"production_year"`
 	PublicationRights     PublicationRights   `json:"publication_rights"`
 	Season                Season              `json:"season"`
@@ -191,6 +191,8 @@ func (a *Asset) Subset() *HitSubset {
 		DescriptionTinySv:     a.DescriptionTinySv,
 		Events:                a.Events,
 		ExternalReferences:    a.ExternalReferences,
+		FifteenBySeven:        a.FifteenBySeven,
+		FourByThree:           a.FourByThree,
 		GenreDescriptionDa:    a.GenreDescriptionDa,
 		GenreDescriptionFi:    a.GenreDescriptionFi,
 		GenreDescriptionNb:    a.GenreDescriptionNb,
@@ -202,8 +204,6 @@ func (a *Asset) Subset() *HitSubset {
 		KeywordsSv:            a.KeywordsSv,
 		Landscape:             a.Landscape,
 		Poster:                a.Poster,
-		FourByThree:           a.FourByThree,
-		FifteenBySeven:        a.FifteenBySeven,
 		SpokenLanguages:       a.SpokenLanguages,
 		Studio:                a.Studio,
 		Tags:                  a.Tags,
@@ -247,6 +247,8 @@ type Series struct {
 	DescriptionTinySv     string              `json:"description_tiny_sv"`
 	Events                []Event             `json:"events"`
 	ExternalReferences    []ExternalReference `json:"external_references"`
+	FifteenBySeven        Image               `json:"fifteen_by_seven"`
+	FourByThree           Image               `json:"four_by_three"`
 	GenreDescriptionDa    string              `json:"genre_description_da"`
 	GenreDescriptionFi    string              `json:"genre_description_fi"`
 	GenreDescriptionNb    string              `json:"genre_description_nb"`
@@ -259,8 +261,6 @@ type Series struct {
 	KeywordsSv            []Keyword           `json:"keywords_sv"`
 	Landscape             Image               `json:"landscape"`
 	Poster                Image               `json:"poster"`
-	FourByThree           Image               `json:"four_by_three"`
-	FifteenBySeven        Image               `json:"fifteen_by_seven"`
 	Seasons               []int               `json:"seasons"`
 	SpokenLanguages       []string            `json:"spoken_languages"`
 	Studio                string              `json:"studio"`
@@ -307,6 +307,8 @@ func (s *Series) Subset() *HitSubset {
 		DescriptionTinySv:     s.DescriptionTinySv,
 		Events:                s.Events,
 		ExternalReferences:    s.ExternalReferences,
+		FifteenBySeven:        s.FifteenBySeven,
+		FourByThree:           s.FourByThree,
 		GenreDescriptionDa:    s.GenreDescriptionDa,
 		GenreDescriptionFi:    s.GenreDescriptionFi,
 		GenreDescriptionNb:    s.GenreDescriptionNb,
@@ -318,8 +320,6 @@ func (s *Series) Subset() *HitSubset {
 		KeywordsSv:            s.KeywordsSv,
 		Landscape:             s.Landscape,
 		Poster:                s.Poster,
-		FourByThree:           s.FourByThree,
-		FifteenBySeven:        s.FifteenBySeven,
 		SpokenLanguages:       s.SpokenLanguages,
 		Studio:                s.Studio,
 		Tags:                  s.Tags,
@@ -357,6 +357,8 @@ type Brand struct {
 	DescriptionTinyNb     string              `json:"description_tiny_nb"`
 	DescriptionTinySv     string              `json:"description_tiny_sv"`
 	ExternalReferences    []ExternalReference `json:"external_references"`
+	FifteenBySeven        Image               `json:"fifteen_by_seven"`
+	FourByThree           Image               `json:"four_by_three"`
 	GenreDescriptionDa    string              `json:"genre_description_da"`
 	GenreDescriptionFi    string              `json:"genre_description_fi"`
 	GenreDescriptionNb    string              `json:"genre_description_nb"`
@@ -365,8 +367,6 @@ type Brand struct {
 	ID                    string              `json:"id"`
 	Landscape             Image               `json:"landscape"`
 	Poster                Image               `json:"poster"`
-	FourByThree           Image               `json:"four_by_three"`
-	FifteenBySeven        Image               `json:"fifteen_by_seven"`
 	Studio                string              `json:"studio"`
 	TitleDa               string              `json:"title_da"`
 	TitleFi               string              `json:"title_fi"`
@@ -485,6 +485,8 @@ type Season struct {
 	DescriptionTinyNb     string              `json:"description_tiny_nb"`
 	DescriptionTinySv     string              `json:"description_tiny_sv"`
 	ExternalReferences    []ExternalReference `json:"external_references"`
+	FifteenBySeven        Image               `json:"fifteen_by_seven"`
+	FourByThree           Image               `json:"four_by_three"`
 	GenreDescriptionDa    string              `json:"genre_description_da"`
 	GenreDescriptionFi    string              `json:"genre_description_fi"`
 	GenreDescriptionNb    string              `json:"genre_description_nb"`
@@ -495,8 +497,6 @@ type Season struct {
 	Number                int                 `json:"season_number"`
 	NumberOfEpisodes      int                 `json:"number_of_episodes"`
 	Poster                Image               `json:"poster"`
-	FourByThree           Image               `json:"four_by_three"`
-	FifteenBySeven        Image               `json:"fifteen_by_seven"`
 	Studio                string              `json:"studio"`
 	TitleDa               string              `json:"title_da"`
 	TitleFi               string              `json:"title_fi"`
