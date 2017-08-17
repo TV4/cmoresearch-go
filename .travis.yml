@@ -5,6 +5,10 @@ go:
   - 1.8.3
   - 1.9rc2
 
+dist: trusty
+
+sudo: false
+
 install:
   - go get github.com/golang/lint/golint
 
@@ -12,5 +16,3 @@ script:
   - golint -set_exit_status
   - go vet $(go list ./...)
   - go test $(go list ./...)
-
-sudo: false
