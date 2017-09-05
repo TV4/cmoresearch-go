@@ -462,6 +462,9 @@ type PublicationRights struct {
 
 // Season is a season of an asset, e.g. "Idol season 2".
 type Season struct {
+	BroadcastingInfoDa    string              `json:"broadcasting_info_da"`
+	BroadcastingInfoNb    string              `json:"broadcasting_info_nb"`
+	BroadcastingInfoSv    string              `json:"broadcasting_info_sv"`
 	Cinemascope           Image               `json:"cinemascope"`
 	Country               []string            `json:"country"`
 	DescriptionExtendedDa string              `json:"description_extended_da"`
