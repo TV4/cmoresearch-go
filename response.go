@@ -260,6 +260,7 @@ type Series struct {
 	KeywordsNb            []Keyword           `json:"keywords_nb"`
 	KeywordsSv            []Keyword           `json:"keywords_sv"`
 	Landscape             Image               `json:"landscape"`
+	ParentalRatings       []ParentalRating    `json:"parental_ratings"`
 	Poster                Image               `json:"poster"`
 	Seasons               []int               `json:"seasons"`
 	SpokenLanguages       []string            `json:"spoken_languages"`
