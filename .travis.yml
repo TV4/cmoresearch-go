@@ -12,5 +12,5 @@ install:
 
 script:
   - golint -set_exit_status
-  - go vet $(go list ./...)
-  - go test $(go list ./...)
+  - go vet
+  - go test
