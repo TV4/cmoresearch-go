@@ -10,7 +10,7 @@ func TestNewClient(t *testing.T) {
 		c := NewClient()
 
 		if got, want := c.baseURL.String(), "https://search.b17g.services"; got != want {
-			t.Errorf("s.baseURL.String() = %q, want %q", got, want)
+			t.Errorf("c.baseURL.String() = %q, want %q", got, want)
 		}
 	})
 
@@ -19,7 +19,7 @@ func TestNewClient(t *testing.T) {
 			c := NewClient(SetBaseURL("http://example.com/"))
 
 			if got, want := c.baseURL.String(), "http://example.com/"; got != want {
-				t.Errorf("s.baseURL.String() = %q, want %q", got, want)
+				t.Errorf("c.baseURL.String() = %q, want %q", got, want)
 			}
 		})
 
@@ -27,7 +27,7 @@ func TestNewClient(t *testing.T) {
 			c := NewClient(SetBaseURL(": not an URL"))
 
 			if c.baseURL != nil {
-				t.Error("s.baseURL is not nil")
+				t.Error("c.baseURL is not nil")
 			}
 		})
 	})
@@ -38,7 +38,7 @@ func TestNewClient(t *testing.T) {
 		c := NewClient(SetBaseURL("/"), SetHTTPClient(hc))
 
 		if got, want := c.httpClient, hc; got != want {
-			t.Errorf("s.httpClient = %p, want %p", got, want)
+			t.Errorf("c.httpClient = %p, want %p", got, want)
 		}
 	})
 }
