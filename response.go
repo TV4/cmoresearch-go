@@ -262,6 +262,7 @@ type Series struct {
 	Landscape             Image               `json:"landscape"`
 	ParentalRatings       []ParentalRating    `json:"parental_ratings"`
 	Poster                Image               `json:"poster"`
+	Scripted              bool                `json:"scripted"`
 	Seasons               []int               `json:"seasons"`
 	SpokenLanguages       []string            `json:"spoken_languages"`
 	Studio                string              `json:"studio"`
