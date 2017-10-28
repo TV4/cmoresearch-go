@@ -1,6 +1,9 @@
 package search
 
-import "fmt"
+import (
+	"fmt"
+	"net/http"
+)
 
 // APIError holds an error as received from the search service.
 type APIError struct {
@@ -9,5 +12,5 @@ type APIError struct {
 }
 
 func (e *APIError) Error() string {
-	return fmt.Sprintf("search-api: %d %s", e.Code, e.Message)
+	return fmt.Sprintf("search-api: HTTP %d %s: %s", e.Code, http.StatusText(e.Code), e.Message)
 }

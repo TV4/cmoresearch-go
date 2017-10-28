@@ -11,7 +11,7 @@ func TestAPIError_Error(t *testing.T) {
 		Message: "Foo message",
 	}
 
-	if got, want := err.Error(), "search-api: 418 Foo message"; got != want {
+	if got, want := err.Error(), "search-api: HTTP 418 I'm a teapot: Foo message"; got != want {
 		t.Errorf("err.Error() = %q, want %q", got, want)
 	}
 }

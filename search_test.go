@@ -80,7 +80,7 @@ func TestSearch(t *testing.T) {
 
 		ae := err.(*APIError)
 
-		if got, want := ae.Error(), "search-api: 400 Invalid parameters: site"; got != want {
+		if got, want := ae.Error(), "search-api: HTTP 400 Bad Request: Invalid parameters: site"; got != want {
 			t.Errorf("ae.Error() = %q, want %q", got, want)
 		}
 	})
