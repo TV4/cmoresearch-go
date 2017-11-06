@@ -264,6 +264,9 @@ type Series struct {
 	Poster                Image               `json:"poster"`
 	Scripted              bool                `json:"scripted"`
 	Seasons               []int               `json:"seasons"`
+	SeasonsDa             []int               `json:"seasons_cmore_dk"`
+	SeasonsNb             []int               `json:"seasons_cmore_no"`
+	SeasonsSv             []int               `json:"seasons_cmore_se"`
 	SpokenLanguages       []string            `json:"spoken_languages"`
 	Studio                string              `json:"studio"`
 	Tags                  Tags                `json:"tags"`
