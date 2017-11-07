@@ -32,8 +32,6 @@ func main() {
 	)
 
 	query := url.Values{
-		"device_type": {"tve_web"},
-		"lang":        {"sv"},
 		"site":        {"cmore.se"},
 		"video_ids":   {"2222333,2222334"},
 	}
@@ -58,7 +56,7 @@ func main() {
 ```
 
 ```
-GET https://search.b17g.services/search?device_type=tve_web&lang=sv&site=cmore.se&video_ids=2222333%2C2222334
+GET https://search.b17g.services/search?site=cmore.se&video_ids=2222333%2C2222334
 2 hits
 Asset 2222334
 Asset 2222333
