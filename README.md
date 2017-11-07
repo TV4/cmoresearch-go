@@ -19,13 +19,17 @@ package main
 import (
 	"context"
 	"fmt"
+	"log"
 	"net/url"
+	"os"
 
 	search "github.com/TV4/search-go"
 )
 
 func main() {
-	client := search.NewClient()
+	client := search.NewClient(
+		search.SetDebugLogf(log.New(os.Stderr, "", 0).Printf),
+	)
 
 	query := url.Values{
 		"device_type": {"tve_web"},
@@ -54,6 +58,7 @@ func main() {
 ```
 
 ```
+GET https://search.b17g.services/search?device_type=tve_web&lang=sv&site=cmore.se&video_ids=2222333%2C2222334
 2 hits
 Asset 2222334
 Asset 2222333

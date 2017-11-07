@@ -1,6 +1,7 @@
 package search
 
 import (
+	"fmt"
 	"net/http"
 	"testing"
 )
@@ -11,6 +12,10 @@ func TestNewClient(t *testing.T) {
 
 		if got, want := c.baseURL.String(), "https://search.b17g.services"; got != want {
 			t.Errorf("c.baseURL.String() = %q, want %q", got, want)
+		}
+
+		if c.debugLogf == nil {
+			t.Errorf("c.debugLogf is nil")
 		}
 	})
 
@@ -39,6 +44,19 @@ func TestNewClient(t *testing.T) {
 
 		if got, want := c.httpClient, hc; got != want {
 			t.Errorf("c.httpClient = %p, want %p", got, want)
+		}
+	})
+
+	t.Run("SetDebugLogf", func(t *testing.T) {
+		logged := ""
+		logf := func(format string, v ...interface{}) {
+			logged = fmt.Sprintf(format, v...)
+		}
+		c := NewClient(SetDebugLogf(logf))
+		c.debugLogf("foo %s", "bar")
+
+		if got, want := logged, "foo bar"; got != want {
+			t.Errorf("c.debugLogf not properly configured (logged %q, want %q)", got, want)
 		}
 	})
 }
