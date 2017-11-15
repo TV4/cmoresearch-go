@@ -3,8 +3,6 @@ language: go
 go:
   - 1.9.2
 
-dist: trusty
-
 sudo: false
 
 install:
