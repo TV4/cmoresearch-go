@@ -171,6 +171,28 @@ func TestNewSearchRequest(t *testing.T) {
 		}
 	})
 
+	t.Run("SetAppName", func(t *testing.T) {
+		for n, tc := range []struct {
+			appName         string
+			wantQueryString string
+		}{
+			{"", ""},
+			{"t1", "client=t1"},
+			{"t2", "client=t2"},
+		} {
+			c := NewClient(SetAppName(tc.appName))
+
+			request, err := c.newSearchRequest(context.Background(), url.Values{})
+			if err != nil {
+				t.Fatalf("unexpected error: %v", err)
+			}
+
+			if got, want := request.URL.Query().Encode(), tc.wantQueryString; got != want {
+				t.Errorf("[%d] got %q, want %q", n, got, want)
+			}
+		}
+	})
+
 	t.Run("FieldsQueryParam", func(t *testing.T) {
 		for n, tc := range []struct {
 			inputQuery      url.Values

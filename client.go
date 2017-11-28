@@ -15,6 +15,7 @@ var (
 
 // Client is a client for the search service.
 type Client struct {
+	appName    string
 	baseURL    *url.URL
 	httpClient *http.Client
 	debugLogf  func(string, ...interface{})
@@ -76,6 +77,13 @@ func SetHTTPClient(hc *http.Client) func(*Client) {
 func SetDebugLogf(logf func(format string, v ...interface{})) func(*Client) {
 	return func(c *Client) {
 		c.debugLogf = logf
+	}
+}
+
+// SetAppName is an option to set the value used in the client parameter sent to search-api.
+func SetAppName(appName string) func(*Client) {
+	return func(c *Client) {
+		c.appName = appName
 	}
 }
 

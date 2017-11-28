@@ -87,6 +87,10 @@ func (c *Client) newSearchRequest(ctx context.Context, query url.Values, options
 
 	ensureCorrectFieldsParam(&query)
 
+	if query != nil && c.appName != "" {
+		query.Set("client", c.appName)
+	}
+
 	u.RawQuery = query.Encode()
 
 	req, err := http.NewRequest("GET", u.String(), nil)
