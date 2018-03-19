@@ -3,7 +3,7 @@ Package search implements a client for Bonnier Broadcasting's search service.
 
 API Documentation
 
-https://search.b17g.services/docs/
+https://cmore-search.b17g.services/docs/
 
 Usage
 

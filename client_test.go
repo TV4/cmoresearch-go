@@ -10,7 +10,7 @@ func TestNewClient(t *testing.T) {
 	t.Run("DefaultConfig", func(t *testing.T) {
 		c := NewClient()
 
-		if got, want := c.baseURL.String(), "https://search.b17g.services"; got != want {
+		if got, want := c.baseURL.String(), "https://cmore-search.b17g.services"; got != want {
 			t.Errorf("c.baseURL.String() = %q, want %q", got, want)
 		}
 

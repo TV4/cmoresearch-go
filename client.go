@@ -9,7 +9,7 @@ import (
 var (
 	defaultBaseURL = &url.URL{
 		Scheme: "https",
-		Host:   "search.b17g.services",
+		Host:   "cmore-search.b17g.services",
 	}
 )
 

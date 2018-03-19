@@ -56,7 +56,7 @@ func main() {
 ```
 
 ```
-GET https://search.b17g.services/search?site=cmore.se&video_ids=2222333%2C2222334
+GET https://cmore-search.b17g.services/search?site=cmore.se&video_ids=2222333%2C2222334
 2 hits
 Asset 2222334
 Asset 2222333
@@ -64,4 +64,4 @@ Asset 2222333
 
 ## API Documentation
 
-https://search.b17g.services/docs/
+https://cmore-search.b17g.services/docs/
