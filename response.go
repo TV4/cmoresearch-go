@@ -139,6 +139,7 @@ type Asset struct {
 	LogoHomeTeam          Image               `json:"logohometeam"`
 	MLTNIDs               []string            `json:"mlt_nids"`
 	OriginalTitle         OriginalTitle       `json:"original_title"`
+	ParentVideoID         string              `json:"parent_video_id"`
 	ParentalRatings       []ParentalRating    `json:"parental_ratings"`
 	Poster                Image               `json:"poster"`
 	ProductionYear        string              `json:"production_year"`
