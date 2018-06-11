@@ -1,5 +1,5 @@
 /*
-Package search implements a client for Bonnier Broadcasting's search service.
+Package cmoresearch implements a client for C More's search service.
 
 API Documentation
 
@@ -16,11 +16,11 @@ A small usage example:
 			"fmt"
 			"net/url"
 
-			search "github.com/TV4/search-go"
+			cmoresearch "github.com/TV4/cmoresearch-go"
 		)
 
 		func main() {
-			client := search.NewClient()
+			client := cmoresearch.NewClient()
 
 			res, err := client.Search(
 				context.Background(),
@@ -43,7 +43,7 @@ A small usage example:
 			}
 
 			for _, hit := range res.Hits {
-				if a, ok := hit.(*search.Asset); ok {
+				if a, ok := hit.(*cmoresearch.Asset); ok {
 					fmt.Printf("%s S%02dE%02d\n", a.Brand.TitleSv, a.Season.Number, a.EpisodeNumber)
 				}
 			}
@@ -54,4 +54,4 @@ Output:
 		Solsidan S01E02
 		Solsidan S01E03
 */
-package search
+package cmoresearch

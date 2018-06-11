@@ -1,15 +1,15 @@
-# Search
+# cmoresearch-go
 
-[![Build Status](https://travis-ci.org/TV4/search-go.svg?branch=master)](https://travis-ci.org/TV4/search-go)
-[![Go Report Card](https://goreportcard.com/badge/github.com/TV4/search-go)](https://goreportcard.com/report/github.com/TV4/search-go)
-[![GoDoc](https://img.shields.io/badge/godoc-reference-blue.svg?style=flat)](https://godoc.org/github.com/TV4/search-go)
-[![License MIT](https://img.shields.io/badge/license-MIT-lightgrey.svg?style=flat)](https://github.com/TV4/search-go#license)
+[![Build Status](https://travis-ci.org/TV4/cmoresearch-go.svg?branch=master)](https://travis-ci.org/TV4/cmoresearch-go)
+[![Go Report Card](https://goreportcard.com/badge/github.com/TV4/cmoresearch-go)](https://goreportcard.com/report/github.com/TV4/cmoresearch-go)
+[![GoDoc](https://img.shields.io/badge/godoc-reference-blue.svg?style=flat)](https://godoc.org/github.com/TV4/cmoresearch-go)
+[![License MIT](https://img.shields.io/badge/license-MIT-lightgrey.svg?style=flat)](https://github.com/TV4/cmoresearch-go#license)
 
-Search is a Go client for Bonnier Broadcasting's search service.
+`cmoresearch-go` is a Go client for C More's search service.
 
 ## Installation
 ```
-go get -u github.com/TV4/search-go
+go get -u github.com/TV4/cmoresearch-go
 ```
 
 ## Usage
@@ -23,12 +23,12 @@ import (
 	"net/url"
 	"os"
 
-	search "github.com/TV4/search-go"
+	cmoresearch "github.com/TV4/cmoresearch-go"
 )
 
 func main() {
-	client := search.NewClient(
-		search.SetDebugLogf(log.New(os.Stderr, "", 0).Printf),
+	client := cmoresearch.NewClient(
+		cmoresearch.SetDebugLogf(log.New(os.Stderr, "", 0).Printf),
 	)
 
 	query := url.Values{
@@ -46,9 +46,9 @@ func main() {
 
 	for _, hit := range res.Hits {
 		switch h := hit.(type) {
-		case *search.Asset:
+		case *cmoresearch.Asset:
 			fmt.Printf("Asset %s\n", h.VideoID)
-		case *search.Series:
+		case *cmoresearch.Series:
 			fmt.Printf("Series %s\n", h.BrandID)
 		}
 	}
