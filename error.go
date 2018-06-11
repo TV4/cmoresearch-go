@@ -12,5 +12,5 @@ type APIError struct {
 }
 
 func (e *APIError) Error() string {
-	return fmt.Sprintf("search-api: HTTP %d %s: %s", e.Code, http.StatusText(e.Code), e.Message)
+	return fmt.Sprintf("cmore-search: HTTP %d %s: %s", e.Code, http.StatusText(e.Code), e.Message)
 }

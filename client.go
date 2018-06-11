@@ -80,7 +80,8 @@ func SetDebugLogf(logf func(format string, v ...interface{})) func(*Client) {
 	}
 }
 
-// SetAppName is an option to set the value used in the client parameter sent to search-api.
+// SetAppName is an option to set the value used in the client parameter sent to
+// cmore-search.
 func SetAppName(appName string) func(*Client) {
 	return func(c *Client) {
 		c.appName = appName
