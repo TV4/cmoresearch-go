@@ -1,8 +1,7 @@
 language: go
 
 go:
-  - "1.11.2"
-  - "1.10.5"
+  - "1.11.4"
 
 install:
   - go get -u golang.org/x/lint/golint
