@@ -68,7 +68,7 @@ https://cmore-search.b17g.services/docs/
 
 ## License
 
-Copyright (c) 2017-2019 Bonnier Broadcasting
+Copyright (c) 2017-2019 TV4
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
