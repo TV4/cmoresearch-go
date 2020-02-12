@@ -86,6 +86,9 @@ type Asset struct {
 	AwayTeam              Team                `json:"awayteam"`
 	Brand                 Brand               `json:"brand"`
 	Cinemascope           Image               `json:"cinemascope"`
+	ContentAPIID          string              `json:"content_api_id"`
+	ContentAPISeasonID    string              `json:"content_api_season_id"`
+	ContentAPISeriesID    string              `json:"content_api_series_id"`
 	ContentSource         string              `json:"content_source"`
 	Country               []string            `json:"country"`
 	Credits               []Credit            `json:"credits"`
@@ -156,9 +159,6 @@ type Asset struct {
 	Type                  string              `json:"type"`
 	VMANID                string              `json:"vman_id"`
 	VideoID               string              `json:"video_id"`
-	ContentAPIID          string              `json:"content_api_id"`
-	ContentAPISeriesID    string              `json:"content_api_series_id"`
-	ContentAPISeasonID    string              `json:"content_api_season_id"`
 }
 
 // Subset returns the HitSubset for an *Asset
