@@ -227,6 +227,7 @@ type Series struct {
 	BrandID               string              `json:"brand_id"`
 	Cinemascope           Image               `json:"cinemascope"`
 	ContentSource         string              `json:"content_source"`
+	ContentAPISeriesID    string              `json:"content_api_series_id"`
 	Country               []string            `json:"country"`
 	Credits               []Credit            `json:"credits"`
 	DescriptionExtendedDa string              `json:"description_extended_da"`
