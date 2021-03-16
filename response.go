@@ -270,6 +270,7 @@ type Series struct {
 	Scripted              bool                `json:"scripted"`
 	Seasons               []int               `json:"seasons"`
 	SeasonsDk             []int               `json:"seasons_cmore_dk"`
+	SeasonsFi             []int               `json:"seasons_cmore_fi"`
 	SeasonsNo             []int               `json:"seasons_cmore_no"`
 	SeasonsSe             []int               `json:"seasons_cmore_se"`
 	SpokenLanguages       []string            `json:"spoken_languages"`
