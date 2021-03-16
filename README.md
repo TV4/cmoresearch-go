@@ -7,11 +7,6 @@
 
 `cmoresearch-go` is a Go client for C More's search service.
 
-## Installation
-```
-go get -u github.com/TV4/cmoresearch-go
-```
-
 ## Usage
 ```go
 package main
