@@ -395,13 +395,15 @@ type Credit struct {
 
 // Event contains publication rights for an asset.
 type Event struct {
-	Site          string    `json:"site"`
-	DeviceTypes   []string  `json:"device_types"`
-	ProductGroups []string  `json:"product_groups"`
-	Products      []string  `json:"products"`
-	StartTime     time.Time `json:"start_time"`
-	EndTime       time.Time `json:"end_time"`
-	PublishTime   time.Time `json:"publish_time"`
+	Site              string    `json:"site"`
+	DeviceTypes       []string  `json:"device_types"`
+	ProductGroups     []string  `json:"product_groups"`
+	Products          []string  `json:"products"`
+	StartTime         time.Time `json:"start_time"`
+	EndTime           time.Time `json:"end_time"`
+	PublishTime       time.Time `json:"publish_time"`
+	LivePublished     bool      `json:"live_published"`
+	OnDemandPublished bool      `json:"on_demand_published"`
 }
 
 // ExternalReference is a reference to additional information contained in
